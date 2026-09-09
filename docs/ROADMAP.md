@@ -13,4 +13,8 @@ Until that lands, email is the only record — nothing here should be treated as
 
 ## Custom domain
 
-No domain purchased yet — the site ships to Vercel's default `*.vercel.app` URL. When a domain is bought, update `APP_URL` in Vercel's env vars and add the domain in the Vercel project's Domains settings; `robots.ts`/`sitemap.ts`/`layout.tsx`'s `metadataBase` all read `APP_URL`, so no code change should be needed beyond that.
+No domain purchased yet — the site ships to Vercel's default `*.vercel.app` URL. When a domain is bought, update `APP_URL` in Vercel's Production env var and add the domain in the Vercel project's Domains settings; `robots.ts`/`sitemap.ts`/`layout.tsx` all read it through `src/lib/siteUrl.ts`'s single `SITE_URL` export, so no code change should be needed beyond that env var. Also regenerate `src/app/opengraph-image.png` if the domain change comes with any visual rebrand (it doesn't embed the domain itself, so a plain domain swap needs no regeneration).
+
+## Structured data (JSON-LD)
+
+Not added yet — see CLAUDE.md's "SEO & accessibility" section. Worth adding an `Organization` (and maybe `Product`, once pricing is final) JSON-LD block once a real domain is bought; low value before then since it's mostly a ranking/rich-result signal tied to a stable, indexed domain.

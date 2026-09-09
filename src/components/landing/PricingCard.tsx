@@ -15,8 +15,14 @@ export function PricingCard({ plan, onSelect }: { plan: PricingPlan; onSelect: (
       {plan.highlight && <span className="mb-3 self-start rounded-full bg-primary-soft px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-primary">Más elegido</span>}
       <h3 className="text-[17px] font-extrabold text-text">{plan.name}</h3>
       <p className="mt-1 text-[12px] font-bold text-text-muted">{plan.unitsLabel}</p>
-      <p className="mt-5"><span className="text-[30px] font-black tracking-[-1px] text-text">{formatColones(plan.monthlyRatePerUnit)}</span><span className="text-[12px] font-bold text-text-muted"> / unidad / mes</span></p>
-      <p className="mt-1 text-[11px] font-bold text-primary">-{ANNUAL_DISCOUNT_PERCENT}% pagando anual</p>
+      {plan.monthlyRatePerUnit !== null ? (
+        <>
+          <p className="mt-5"><span className="text-[30px] font-black tracking-[-1px] text-text">{formatColones(plan.monthlyRatePerUnit)}</span><span className="text-[12px] font-bold text-text-muted"> / unidad / mes</span></p>
+          <p className="mt-1 text-[11px] font-bold text-primary">-{ANNUAL_DISCOUNT_PERCENT}% pagando anual</p>
+        </>
+      ) : (
+        <p className="mt-5 text-[26px] font-black tracking-[-1px] text-text">Personalizado</p>
+      )}
       <ul className="my-6 grid gap-2.5">
         {INCLUDED.map((item) => (
           <li key={item} className="flex items-center gap-2 text-[12px] font-semibold text-text"><Check size={14} className="shrink-0 text-primary" /> {item}</li>

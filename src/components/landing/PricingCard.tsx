@@ -12,6 +12,9 @@ type PricingCardProps = {
   // highlight transition (not an instant swap) so the connection between "you typed this
   // number" and "this is your plan" reads as cause and effect, not a jump cut.
   matched?: boolean;
+  // The exact graduated total for the typed unit count — replaces the flat per-unit rate on this
+  // card while matched (not shown alongside it), since a matched card is answering "what do I
+  // actually pay," not "what's the rate."
   matchedTotal?: number | null;
   // Whether the calculator has a result at all right now (for *any* card, not necessarily this
   // one). Lets this card's own "recommended" button styling step aside while a different card is
@@ -35,7 +38,12 @@ export function PricingCard({ plan, onSelect, matched = false, matchedTotal = nu
       {plan.highlight && <span className="absolute -top-3 left-6 rounded-full bg-primary-soft px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-primary shadow-[0_4px_10px_rgba(24,36,26,0.12)]">Rango más común entre nuestros clientes</span>}
       <h3 className="text-[17px] font-extrabold text-text">{plan.name}</h3>
       <p className="mt-1 text-[12px] font-bold text-text-muted">{plan.unitsLabel}</p>
-      {plan.monthlyRatePerUnit !== null ? (
+      {matched && matchedTotal !== null ? (
+        <>
+          <p className="mt-5"><span className="text-[30px] font-black tracking-[-1px] text-text">{formatColones(matchedTotal)}</span><span className="text-[12px] font-bold text-text-muted"> / mes</span></p>
+          <p className="mt-1 text-[11px] font-bold text-primary">-{ANNUAL_DISCOUNT_PERCENT}% pagando anual</p>
+        </>
+      ) : plan.monthlyRatePerUnit !== null ? (
         <>
           <p className="mt-5"><span className="text-[30px] font-black tracking-[-1px] text-text">{formatColones(plan.monthlyRatePerUnit)}</span><span className="text-[12px] font-bold text-text-muted"> / unidad / mes</span></p>
           <p className="mt-1 text-[11px] font-bold text-primary">-{ANNUAL_DISCOUNT_PERCENT}% pagando anual</p>
@@ -43,11 +51,6 @@ export function PricingCard({ plan, onSelect, matched = false, matchedTotal = nu
       ) : (
         <p className="mt-5 text-[26px] font-black tracking-[-1px] text-text">Personalizado</p>
       )}
-      <div className={clsx("grid transition-all duration-500 ease-out", matched ? "mt-2 grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0")}>
-        <div className="overflow-hidden">
-          <p className="text-[11px] font-black text-primary">Tu precio: {matchedTotal !== null ? `${formatColones(matchedTotal)}/mes` : "personalizado"}</p>
-        </div>
-      </div>
       <span className="mt-4 inline-flex w-fit items-center gap-1.5 rounded-full border border-primary/30 px-2.5 py-1 text-[10px] font-black text-primary"><Check size={12} className="shrink-0" /> 1 mes de demo incluido</span>
       <ul className="my-6 grid gap-2.5">
         {INCLUDED.map((item) => (

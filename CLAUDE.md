@@ -43,7 +43,7 @@ New env vars this needs (set in Vercel, never committed): `CONDO_ADMIN_API_URL` 
 
 From here, a lead shows up in `/master/leads` (a "Nueva" badge until opened) and in `/master/analytics`'s "Leads" tab (a 6-month trend chart + breakdown by requested plan) — both on the Condo-Admin-Tool side; nothing to maintain here beyond keeping the two env vars in sync if the secret is ever rotated.
 
-`EMAIL_FROM` reuses the main app's already-DNS-verified Resend sending domain (`Livva <support@livvaadmin.info>`) rather than the shared `onboarding@resend.dev` sandbox address, since that domain is already proven to work in production for `Condo-Admin-Tool`. Both projects currently share one Resend account/domain — that's a deliberate reuse of existing, working infrastructure, not an accident.
+`EMAIL_FROM` reuses the main app's already-DNS-verified Resend sending domain (`Livva <soporte@livvaadmin.info>`) rather than the shared `onboarding@resend.dev` sandbox address, since that domain is already proven to work in production for `Condo-Admin-Tool`. Both projects currently share one Resend account/domain — that's a deliberate reuse of existing, working infrastructure, not an accident.
 
 ## Deployment
 

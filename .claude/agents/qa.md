@@ -13,8 +13,10 @@ This is a single public page with no login and no roles — QA here is much smal
 - **Viewports**: below 720px (mobile), 720–1000px (tablet), and above 1000px (desktop) — this project's only two real breakpoints are `mobile`/`tablet`.
 - **Both themes**: toggle the OS/browser color scheme to dark and re-check every section — there's no in-page toggle, only `prefers-color-scheme`.
 - **The lead form end-to-end**: submit with valid data and confirm the success state renders; submit with an invalid email / missing field and confirm the right inline error shows; confirm clicking "Quiero este plan" on each pricing card scrolls to the contact form with that plan pre-selected in the `<select>`.
-- **Anchor nav**: every header link and in-page CTA (`#funciones`, `#planes`, `#contacto`) actually scrolls to the right section.
-- **Visual consistency**: card spacing/radius/shadow consistent across `ValueProps`/`Features`/`PricingCard`, text truncation/overflow on long input (a long residencial name in the form, a long plan name), computed background-color on the highlighted pricing card actually differs from the other two (not just visually similar).
+- **Anchor nav**: every header link and in-page CTA (`#funciones`, `#seguridad`, `#planes`, `#contacto`) actually scrolls to the right section.
+- **Visual consistency**: card spacing/radius/shadow consistent across `ValueProps`/`Features`/`PricingCard`/`Security`, text truncation/overflow on long input (a long residencial name in the form, a long plan name), computed background-color on the highlighted pricing card actually differs from the other two (not just visually similar).
+- **Features carousel** (`Features.tsx`): the marquee actually pauses on hover (readable, not fighting the animation to read a caption), and `prefers-reduced-motion` genuinely stops it rather than just slowing it down. Confirm the loop is seamless (no visible jump/reset) — if a screenshot is ever added or removed from `FEATURES`, check the duplicated `LOOP` array still produces a clean `-50%` loop.
+- **Device-frame screenshots** (`Hero`/`Features`/`MobileShowcase`, via `DeviceFrames.tsx`): each crops toward the top of a real app screenshot — check on a real render (not just the source file) that nothing important got cropped out and the sidebar-footer noise (account switcher) at the bottom is actually gone.
 
 ## Reporting
 

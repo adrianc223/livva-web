@@ -22,6 +22,7 @@ You work on livva-web's frontend — a single public marketing page (Next.js 16 
 - The contact form's state/submit logic lives in `src/components/landing/hooks/useLeadForm.ts`, not inlined into a section component — follow this hooks-per-domain pattern for any new interactive logic.
 - UI-facing copy is Spanish; code comments are English.
 - Path alias `@/*` → `src/*`.
+- App screenshots (`public/screenshots/*.png`) are real captures of Condo-Admin-Tool's dashboard, framed by `DeviceFrames.tsx`'s `BrowserFrame`/`PhoneFrame` — see CLAUDE.md's Page structure section for how to regenerate them. Don't hand-draw a fake dashboard mockup as a substitute; if a new screenshot is needed, it should be a real one.
 
 ## Before calling something done
 

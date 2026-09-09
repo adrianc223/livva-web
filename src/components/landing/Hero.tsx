@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { Logo } from "@/components/Logo";
+import { BrowserFrame, PhoneFrame } from "./DeviceFrames";
 
 export function Hero() {
   return (
@@ -31,6 +32,14 @@ export function Hero() {
             Solicitar información
           </a>
         </div>
+      </div>
+      <div className="relative z-[1] mt-14 w-full max-w-[880px] tablet:mt-20">
+        <BrowserFrame src="/screenshots/desktop-resumen.png" alt="Resumen del condominio en Livva" className="h-[260px] w-full tablet:h-[420px]" />
+        <PhoneFrame
+          src="/screenshots/mobile-resumen.png"
+          alt="Resumen de Livva en el celular"
+          className="absolute -bottom-10 -right-2 hidden h-[220px] w-[108px] tablet:block"
+        />
       </div>
     </section>
   );

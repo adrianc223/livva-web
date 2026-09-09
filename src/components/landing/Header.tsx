@@ -2,6 +2,7 @@ import { Logo } from "@/components/Logo";
 
 const NAV_LINKS = [
   { href: "#funciones", label: "Funciones" },
+  { href: "#seguridad", label: "Seguridad" },
   { href: "#planes", label: "Planes" },
   { href: "#contacto", label: "Contacto" },
 ];

@@ -1,15 +1,10 @@
 # Roadmap
 
-## Leads → master dashboard integration (deferred)
+## Leads → master dashboard integration — done (2026-09-09)
 
-Leads submitted through the landing page's contact form currently only trigger an email (`sendLeadNotificationEmail`, `src/lib/email/resend.ts`) to `LEAD_NOTIFY_EMAIL` — nothing is persisted, and there's no way to see past leads except in an inbox.
+Leads now reach both an email (`sendLeadNotificationEmail`) and a real `LandingLead` row in Condo-Admin-Tool's database (via a shared-secret server-to-server call — see CLAUDE.md's "Lead capture" section here and that repo's own "Leads (from livva-web)" section). `/master/leads` lists them with a "Nueva" badge, and `/master/analytics`'s "Leads" tab charts them. Reply is a plain `mailto:` link from that page — no in-app compose/send exists or is planned.
 
-The plan, for a future session: add a real inbox for these in the main app's master dashboard (`Condo-Admin-Tool`'s `/master`), likely as:
-- A `LandingLead` Prisma model (name, community, email, plan, message, createdAt, maybe a `contacted` boolean) — modeled loosely after `ApprovalRequest`'s shape (a simple record + status), not a full CRM.
-- A `POST` endpoint the landing page's `/api/leads` route calls (or is replaced by) instead of only emailing.
-- A `/master/leads` page listing them, mirroring `/master/feedback`'s pattern (list newest-first, mark-as-read/contacted on open).
-
-Until that lands, email is the only record — nothing here should be treated as a durable lead database.
+**Still not built, if ever wanted**: marking a lead "contacted"/"converted" beyond the binary new/seen state a badge already gives; anything CRM-shaped (notes, follow-up reminders, pipeline stages) — this was deliberately kept to "read the list, badge what's new, reply by email" rather than building toward a full CRM nobody asked for yet.
 
 ## Custom domain
 

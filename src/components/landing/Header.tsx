@@ -11,7 +11,10 @@ export function Header() {
   return (
     <header className="sticky top-0 z-20 border-b border-border bg-background/90 backdrop-blur">
       <div className="mx-auto flex max-w-[1100px] items-center justify-between px-5 py-4">
-        <a href="#inicio" className="flex items-center gap-2 text-[17px] font-black text-text">
+        {/* Hidden at tablet+ (desktop) — the Hero already carries a large "livva" mark there,
+            so repeating it in the sticky header read as redundant. Kept below that breakpoint,
+            where the Hero's own logo is small and this is the primary brand anchor. */}
+        <a href="#inicio" className="flex items-center gap-2 text-[17px] font-black text-text tablet:hidden">
           <Logo variant="auto" className="h-7 w-auto" /> livva
         </a>
         <nav className="hidden items-center gap-7 text-[13px] font-bold text-text-muted tablet:flex">

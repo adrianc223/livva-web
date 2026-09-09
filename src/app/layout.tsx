@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/siteUrl";
 import "./globals.css";
 
-const APP_URL = process.env.APP_URL || "https://livva.vercel.app";
+const TITLE = "Livva — Uniendo comunidades";
+const DESCRIPTION = "La plataforma que une a tu residencial: cuotas, anuncios, reservas, mensajería y un marketplace interno, todo en un solo lugar.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(APP_URL),
-  title: "Livva — Uniendo comunidades",
-  description: "La plataforma que une a tu residencial: cuotas, anuncios, reservas, mensajería y un marketplace interno, todo en un solo lugar.",
+  metadataBase: new URL(SITE_URL),
+  title: TITLE,
+  description: DESCRIPTION,
   openGraph: {
-    title: "Livva — Uniendo comunidades",
-    description: "La plataforma que une a tu residencial: cuotas, anuncios, reservas, mensajería y un marketplace interno, todo en un solo lugar.",
-    url: APP_URL,
+    title: TITLE,
+    description: DESCRIPTION,
+    url: SITE_URL,
     siteName: "Livva",
     locale: "es_CR",
     type: "website",

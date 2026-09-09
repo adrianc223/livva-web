@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
+import { SITE_URL } from "@/lib/siteUrl";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const url = process.env.APP_URL || "https://livva.vercel.app";
-  return [{ url, lastModified: new Date(), changeFrequency: "monthly", priority: 1 }];
+  return [{ url: SITE_URL, lastModified: new Date(), changeFrequency: "monthly", priority: 1 }];
 }

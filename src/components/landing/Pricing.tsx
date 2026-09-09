@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PRICING_PLANS, resolvePlanForUnits } from "@/lib/pricing";
 import { PricingCalculator } from "./PricingCalculator";
 import { PricingCard } from "./PricingCard";
@@ -9,6 +9,24 @@ export function Pricing({ onSelectPlan }: { onSelectPlan: (planId: string) => vo
   const [units, setUnits] = useState("");
   const parsedUnits = Number(units);
   const result = units && parsedUnits > 0 ? resolvePlanForUnits(parsedUnits) : null;
+
+  const cardRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+  // Below `tablet`, the 3 cards are a swipeable carousel (see the track's classes below), not a
+  // stacked column — a plain single-column stack is what looked bad on mobile. Once the
+  // calculator resolves a plan, scroll that card into view here too, so "type your number" and
+  // "here's your card, highlighted" stay connected even when the match isn't the one already on
+  // screen. `inline: "center"` is what does the horizontal work on mobile; `block: "nearest"`
+  // keeps this from also scrolling the page vertically — on tablet+ (a real grid, no horizontal
+  // overflow) this call is a no-op since the card's already fully in view.
+  useEffect(() => {
+    if (!result) return;
+    cardRefs.current[result.plan.id]?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    // Deliberately keyed on the matched plan's id alone, not the whole `result` object —
+    // resolvePlanForUnits returns a fresh object on every keystroke even when the matched plan
+    // hasn't changed, and re-scrolling on every digit typed would fight anyone still typing.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [result?.plan.id]);
 
   return (
     <section id="planes" className="bg-surface-muted px-5 py-20">
@@ -19,16 +37,21 @@ export function Pricing({ onSelectPlan }: { onSelectPlan: (planId: string) => vo
           <p className="mt-3 text-[13px] text-text-muted">Todas las funcionalidades incluidas sin importar el tamaño — el precio no se elige, se calcula solo según la cantidad de unidades de tu comunidad.</p>
         </div>
         <PricingCalculator units={units} onUnitsChange={setUnits} result={result} />
-        <div className="grid grid-cols-1 gap-5 tablet:grid-cols-3">
+        <div className="no-scrollbar -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 tablet:mx-0 tablet:grid tablet:grid-cols-3 tablet:gap-5 tablet:overflow-visible tablet:px-0 tablet:pb-0">
           {PRICING_PLANS.map((plan) => (
-            <PricingCard
+            <div
               key={plan.id}
-              plan={plan}
-              onSelect={onSelectPlan}
-              matched={result?.plan.id === plan.id}
-              matchedTotal={result?.plan.id === plan.id ? result.monthlyTotal : null}
-              calculatorActive={result !== null}
-            />
+              ref={(element) => { cardRefs.current[plan.id] = element; }}
+              className="w-[82%] flex-shrink-0 snap-center tablet:w-auto"
+            >
+              <PricingCard
+                plan={plan}
+                onSelect={onSelectPlan}
+                matched={result?.plan.id === plan.id}
+                matchedTotal={result?.plan.id === plan.id ? result.monthlyTotal : null}
+                calculatorActive={result !== null}
+              />
+            </div>
           ))}
         </div>
         <p className="mt-8 text-center text-[12px] text-text-muted">¿Administrás varios condominios o un portafolio más grande? <a href="#contacto" className="font-bold text-primary">Hablemos</a>.</p>

@@ -4,21 +4,26 @@ const STEPS = [
   { number: "3", title: "Todos empiezan a usarla", copy: "Pagos, anuncios, reservas y mensajería, disponibles desde el primer día." },
 ];
 
+// Same hand-picked dark palette as Hero.tsx and DemoPromo.tsx (not the surface/primary tokens the
+// rest of the page uses) — a third dark band breaks up what would otherwise be a long run of
+// near-identical light sections between Security and Pricing.
 export function HowItWorks() {
   return (
-    <section className="mx-auto max-w-[1100px] px-5 py-20">
-      <div className="mx-auto mb-12 max-w-[560px] text-center">
-        <span className="text-[11px] font-black uppercase tracking-[1.6px] text-primary">Cómo funciona</span>
-        <h2 className="mt-2 text-[clamp(24px,3.5vw,34px)] tracking-[-1px] text-text">Empezar toma minutos, no semanas</h2>
-      </div>
-      <div className="grid grid-cols-1 gap-6 tablet:grid-cols-3 tablet:gap-5">
-        {STEPS.map((step) => (
-          <div key={step.number} className="text-center tablet:text-left">
-            <div className="mx-auto mb-3 grid h-10 w-10 place-items-center rounded-full bg-primary text-[15px] font-black text-white tablet:mx-0">{step.number}</div>
-            <h3 className="mb-1.5 text-[15px] font-extrabold text-text">{step.title}</h3>
-            <p className="text-[13px] leading-relaxed text-text-muted">{step.copy}</p>
-          </div>
-        ))}
+    <section className="bg-[#1f3d2f] px-5 py-20">
+      <div className="mx-auto max-w-[1100px]">
+        <div className="mx-auto mb-12 max-w-[560px] text-center">
+          <span className="text-[11px] font-black uppercase tracking-[1.6px] text-[#cfe3d5]">Cómo funciona</span>
+          <h2 className="mt-2 text-[clamp(24px,3.5vw,34px)] tracking-[-1px] text-white">Empezar toma minutos, no semanas</h2>
+        </div>
+        <div className="grid grid-cols-1 gap-6 tablet:grid-cols-3 tablet:gap-5">
+          {STEPS.map((step) => (
+            <div key={step.number} className="text-center tablet:text-left">
+              <div className="mx-auto mb-3 grid h-10 w-10 place-items-center rounded-full bg-white text-[15px] font-black text-[#1f3d2f] tablet:mx-0">{step.number}</div>
+              <h3 className="mb-1.5 text-[15px] font-extrabold text-white">{step.title}</h3>
+              <p className="text-[13px] leading-relaxed text-[#dcecdf]">{step.copy}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

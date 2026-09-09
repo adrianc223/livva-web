@@ -4,6 +4,8 @@
 
 This file documents how `livva-web` works. **Living document** — update the relevant section here in the same session you ship a change, same convention as the main app.
 
+**Onboarding a new machine**: `docs/ONBOARDING.md` covers what to install/authenticate so an AI assistant (or a new dev) can pick this repo back up on any machine — accounts, tools, one-time logins, and how this project relates to its sibling repo `Condo-Admin-Tool` (GitHub/Vercel locations for both, what's shared vs. independent).
+
 ## Project overview
 
 `livva-web` is the public, informational landing page for **Livva** — a separate, much smaller Next.js 16 (App Router) + React 19 + TypeScript + Tailwind CSS v4 project from the real product (`Condo-Admin-Tool`, elsewhere on this machine). It's a single scrolling page (`src/app/page.tsx` → `src/components/landing/LandingPage.tsx`) pitching the product ("Uniendo comunidades"), presenting 3 pricing tiers by unit count, and capturing leads through a contact form. There is **no database, no auth, and no multi-tenancy** here — this is intentionally the lightest possible project, not a scaled-down clone of the main app's architecture.

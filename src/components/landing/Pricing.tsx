@@ -37,7 +37,10 @@ export function Pricing({ onSelectPlan }: { onSelectPlan: (planId: string) => vo
           <p className="mt-3 text-[13px] text-text-muted">Todas las funcionalidades incluidas sin importar el tamaño — el precio no se elige, se calcula solo según la cantidad de unidades de tu comunidad.</p>
         </div>
         <PricingCalculator units={units} onUnitsChange={setUnits} result={result} />
-        <div className="no-scrollbar -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-2 tablet:mx-0 tablet:grid tablet:grid-cols-3 tablet:gap-5 tablet:overflow-visible tablet:px-0 tablet:pb-0">
+        {/* overflow-x-auto forces the y-axis to clip too (same gotcha as Features.tsx's track) —
+            the badge sits above the card's own top edge, and the matched card's shadow/scale grow
+            past its box on every side, so this needs real top+bottom padding, not just pb-2. */}
+        <div className="no-scrollbar -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-8 pt-6 tablet:mx-0 tablet:grid tablet:grid-cols-3 tablet:gap-5 tablet:overflow-visible tablet:px-0 tablet:pb-0 tablet:pt-0">
           {PRICING_PLANS.map((plan) => (
             <div
               key={plan.id}

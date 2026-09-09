@@ -1,6 +1,7 @@
 "use client";
 
 import { ContactSection } from "./ContactSection";
+import { DemoPromo } from "./DemoPromo";
 import { Features } from "./Features";
 import { Footer } from "./Footer";
 import { Header } from "./Header";
@@ -25,6 +26,7 @@ export function LandingPage() {
         <MobileShowcase />
         <HowItWorks />
         <Security />
+        <DemoPromo />
         <Pricing onSelectPlan={selectPlanAndScroll} />
         <ContactSection selectedPlan={selectedPlan} setSelectedPlan={setSelectedPlan} status={status} error={error} submitLead={submitLead} />
       </main>

@@ -23,6 +23,7 @@ export function PricingCard({ plan, onSelect }: { plan: PricingPlan; onSelect: (
       ) : (
         <p className="mt-5 text-[26px] font-black tracking-[-1px] text-text">Personalizado</p>
       )}
+      <span className="mt-4 inline-flex w-fit items-center gap-1.5 rounded-full border border-primary/30 px-2.5 py-1 text-[10px] font-black text-primary"><Check size={12} className="shrink-0" /> 1 mes de demo incluido</span>
       <ul className="my-6 grid gap-2.5">
         {INCLUDED.map((item) => (
           <li key={item} className="flex items-center gap-2 text-[12px] font-semibold text-text"><Check size={14} className="shrink-0 text-primary" /> {item}</li>

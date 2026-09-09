@@ -8,11 +8,11 @@ export function PricingCard({ plan, onSelect }: { plan: PricingPlan; onSelect: (
   return (
     <div
       className={clsx(
-        "flex flex-col rounded-2xl border p-7",
+        "relative flex flex-col rounded-2xl border p-7",
         plan.highlight ? "border-primary bg-surface shadow-[0_20px_50px_rgba(24,36,26,0.14)]" : "border-border bg-surface"
       )}
     >
-      {plan.highlight && <span className="mb-3 self-start rounded-full bg-primary-soft px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-primary">Más elegido</span>}
+      {plan.highlight && <span className="absolute -top-3 left-6 rounded-full bg-primary-soft px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-primary shadow-[0_4px_10px_rgba(24,36,26,0.12)]">Más elegido</span>}
       <h3 className="text-[17px] font-extrabold text-text">{plan.name}</h3>
       <p className="mt-1 text-[12px] font-bold text-text-muted">{plan.unitsLabel}</p>
       {plan.monthlyRatePerUnit !== null ? (

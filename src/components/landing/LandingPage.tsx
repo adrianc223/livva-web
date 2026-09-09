@@ -22,11 +22,11 @@ export function LandingPage() {
       <main className="flex-1">
         <Hero />
         <ValueProps />
+        <DemoPromo />
         <Features />
         <MobileShowcase />
         <HowItWorks />
         <Security />
-        <DemoPromo />
         <Pricing onSelectPlan={selectPlanAndScroll} />
         <ContactSection selectedPlan={selectedPlan} setSelectedPlan={setSelectedPlan} status={status} error={error} submitLead={submitLead} />
       </main>

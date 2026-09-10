@@ -1,8 +1,9 @@
 "use client";
 
+import clsx from "clsx";
 import { X } from "lucide-react";
-import { formatColones, resolvePlanForUnits } from "@/lib/pricing";
-import type { useDemoWizard } from "./hooks/useDemoWizard";
+import { ANNUAL_DISCOUNT_PERCENT, formatColones, resolveAnnualPlanForUnits, resolvePlanForUnits } from "@/lib/pricing";
+import type { BillingCycle, useDemoWizard } from "./hooks/useDemoWizard";
 
 type DemoWizardProps = ReturnType<typeof useDemoWizard>;
 
@@ -20,7 +21,9 @@ export function DemoWizard(wizard: DemoWizardProps) {
   if (!wizard.isOpen) return null;
 
   const parsedUnitCount = Number(wizard.unitCount);
-  const preview = wizard.unitCount && Number.isInteger(parsedUnitCount) && parsedUnitCount >= 1 && !wizard.exceedsSelfServe ? resolvePlanForUnits(parsedUnitCount) : null;
+  const validUnitCount = wizard.unitCount !== "" && Number.isInteger(parsedUnitCount) && parsedUnitCount >= 1 && !wizard.exceedsSelfServe;
+  const preview = validUnitCount ? resolvePlanForUnits(parsedUnitCount) : null;
+  const annualPreview = validUnitCount ? resolveAnnualPlanForUnits(parsedUnitCount) : null;
   const appUrl = process.env.NEXT_PUBLIC_LIVVA_APP_URL ?? "";
 
   return (
@@ -58,12 +61,36 @@ export function DemoWizard(wizard: DemoWizardProps) {
                 <label className={labelClass} htmlFor="wizard-units">Número de unidades</label>
                 <input className={inputClass} id="wizard-units" type="number" min={1} value={wizard.unitCount} onChange={(event) => wizard.setUnitCount(event.target.value)} placeholder="Ej. 45" required />
               </div>
+              <div>
+                <span className={labelClass}>Ciclo de facturación</span>
+                <div role="radiogroup" aria-label="Ciclo de facturación" className="grid w-fit grid-cols-2 gap-0.5 rounded-[9px] bg-surface-muted p-0.5">
+                  {(["MONTHLY", "ANNUAL"] as const satisfies readonly BillingCycle[]).map((option) => (
+                    <button
+                      key={option}
+                      type="button"
+                      role="radio"
+                      aria-checked={wizard.billingCycle === option}
+                      onClick={() => wizard.setBillingCycle(option)}
+                      className={clsx(
+                        "rounded-[7px] px-3.5 py-1.5 text-[11px] font-black transition-colors",
+                        wizard.billingCycle === option ? "bg-primary text-white shadow-[0_4px_10px_rgba(44,89,67,0.25)]" : "bg-transparent text-text-muted"
+                      )}
+                    >
+                      {option === "MONTHLY" ? "Mensual" : `Anual (-${ANNUAL_DISCOUNT_PERCENT}%)`}
+                    </button>
+                  ))}
+                </div>
+              </div>
               <input type="text" value={wizard.website} onChange={(event) => wizard.setWebsite(event.target.value)} tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
 
-              {preview && (
+              {preview && annualPreview && (
                 <p className="text-[13px] leading-relaxed text-text-muted">
                   {preview.monthlyTotal !== null ? (
-                    <>Precio al terminar la demo: <strong className="text-primary">{formatColones(preview.monthlyTotal)}</strong> / mes con el plan <strong className="text-text">{preview.plan.name}</strong></>
+                    wizard.billingCycle === "MONTHLY" ? (
+                      <>Precio al terminar la demo: <strong className="text-primary">{formatColones(preview.monthlyTotal)}</strong> / mes con el plan <strong className="text-text">{preview.plan.name}</strong></>
+                    ) : (
+                      <>Precio al terminar la demo: <strong className="text-primary">{formatColones(annualPreview.annualAmount ?? 0)}</strong> / año con el plan <strong className="text-text">{preview.plan.name}</strong> <span className="text-primary">(ahorrás {ANNUAL_DISCOUNT_PERCENT}% vs. mensual)</span></>
+                    )
                   ) : (
                     <>Plan <strong className="text-text">{preview.plan.name}</strong> — precio personalizado</>
                   )}

@@ -51,3 +51,16 @@ export function resolvePlanForUnits(unitCount: number): { plan: PricingPlan; mon
   }
   return { plan, monthlyTotal };
 }
+
+// The annual (discounted) equivalent of resolvePlanForUnits — mirrors Condo-Admin-Tool's
+// suggestAnnualAmount exactly (same 12% discount, same round-to-nearest-₡1,000), since a self-serve
+// signup or plan resize made against one of these numbers has to charge exactly what was previewed
+// here. Null past the top tier, same boundary as resolvePlanForUnits — no rate to discount.
+export function resolveAnnualPlanForUnits(unitCount: number): { plan: PricingPlan; monthlyTotal: number | null; annualBeforeDiscount: number | null; annualAmount: number | null } {
+  const { plan, monthlyTotal } = resolvePlanForUnits(unitCount);
+  if (monthlyTotal === null) return { plan, monthlyTotal: null, annualBeforeDiscount: null, annualAmount: null };
+
+  const annualBeforeDiscount = monthlyTotal * 12;
+  const annualAmount = Math.round((annualBeforeDiscount * (1 - ANNUAL_DISCOUNT_PERCENT / 100)) / 1000) * 1000;
+  return { plan, monthlyTotal, annualBeforeDiscount, annualAmount };
+}

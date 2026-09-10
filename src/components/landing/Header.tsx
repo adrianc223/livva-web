@@ -1,3 +1,4 @@
+import { Sparkles } from "lucide-react";
 import { Logo } from "@/components/Logo";
 
 const NAV_LINKS = [
@@ -25,18 +26,21 @@ export function Header({ onOpenWizard }: HeaderProps) {
           ))}
         </nav>
         <div className="flex items-center gap-2.5">
+          {/* The bolder, filled treatment (was Contáctanos's) moved here — self-serve signup is
+              the higher-value action for both sides, so it gets the more attention-grabbing
+              button; Contáctanos steps down to the plain outline secondary. */}
           <button
             type="button"
             onClick={onOpenWizard}
-            className="rounded-[10px] border border-primary/30 bg-transparent px-4 py-2.5 text-[12px] font-black text-primary max-mobile:hidden"
+            className="flex items-center gap-1.5 rounded-[10px] bg-primary px-4 py-2.5 text-[12px] font-black text-white shadow-[0_6px_16px_rgba(44,89,67,0.35)] transition-transform hover:scale-[1.04] max-mobile:hidden"
           >
-            Iniciar demo
+            <Sparkles size={14} /> Iniciar demo
           </button>
           <a
             href="#contacto"
-            className="rounded-[10px] bg-primary px-4 py-2.5 text-[12px] font-black text-white shadow-[0_6px_16px_rgba(44,89,67,0.25)]"
+            className="rounded-[10px] border border-primary/30 bg-transparent px-4 py-2.5 text-[12px] font-black text-primary"
           >
-            Contactanos
+            Contáctanos
           </a>
         </div>
       </div>

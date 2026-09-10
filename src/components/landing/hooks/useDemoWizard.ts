@@ -3,6 +3,7 @@ import { resolvePlanForUnits } from "@/lib/pricing";
 
 export type DemoWizardStep = "choice" | "solo-form";
 export type DemoSignupErrorCode = "condominium_exists" | "account_exists" | "unit_count_exceeds_self_serve" | "network";
+export type BillingCycle = "MONTHLY" | "ANNUAL";
 
 // Drives the two-step self-serve demo wizard (see
 // docs/superpowers/specs/2026-09-09-self-serve-demo-onboarding-design.md). onHandoffToContact is
@@ -17,6 +18,7 @@ export function useDemoWizard(onHandoffToContact: (planId: string, unitCount?: s
   const [adminName, setAdminName] = useState("");
   const [adminEmail, setAdminEmail] = useState("");
   const [unitCount, setUnitCount] = useState("");
+  const [billingCycle, setBillingCycle] = useState<BillingCycle>("MONTHLY");
   const [website, setWebsite] = useState(""); // honeypot
 
   const [submitting, setSubmitting] = useState(false);
@@ -29,6 +31,7 @@ export function useDemoWizard(onHandoffToContact: (planId: string, unitCount?: s
     setAdminName("");
     setAdminEmail("");
     setUnitCount("");
+    setBillingCycle("MONTHLY");
     setWebsite("");
     setErrorCode(null);
     setIsOpen(true);
@@ -65,7 +68,7 @@ export function useDemoWizard(onHandoffToContact: (planId: string, unitCount?: s
       const response = await fetch(`${appUrl}/api/public/demo-signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ condominiumName, adminName, adminEmail, unitCount: Number(unitCount), website }),
+        body: JSON.stringify({ condominiumName, adminName, adminEmail, unitCount: Number(unitCount), billingCycle, website }),
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
@@ -85,7 +88,7 @@ export function useDemoWizard(onHandoffToContact: (planId: string, unitCount?: s
   return {
     isOpen, step, initialPlanId, open, close, chooseContact, chooseSolo,
     condominiumName, setCondominiumName, adminName, setAdminName, adminEmail, setAdminEmail,
-    unitCount, setUnitCount, website, setWebsite,
+    unitCount, setUnitCount, billingCycle, setBillingCycle, website, setWebsite,
     exceedsSelfServe, handoffToContactFromForm,
     submitting, errorCode, submit,
   };

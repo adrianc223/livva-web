@@ -7,7 +7,7 @@ export function Footer() {
         <div className="flex items-center gap-2 text-[14px] font-black text-text"><Logo variant="auto" className="h-6 w-auto" /> livva</div>
         <p className="text-[12px] text-text-muted">Uniendo comunidades, una a la vez.</p>
         <div className="text-[12px] text-text-muted">
-          <a href="#contacto" className="font-bold text-primary">Contactanos</a>
+          <a href="#contacto" className="font-bold text-primary">Contáctanos</a>
           <span className="mx-1.5">·</span>© {new Date().getFullYear()} Livva
         </div>
       </div>

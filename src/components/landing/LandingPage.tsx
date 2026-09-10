@@ -30,7 +30,10 @@ export function LandingPage() {
         <MobileShowcase />
         <HowItWorks />
         <Security />
-        <Pricing onSelectPlan={(planId) => wizard.open(planId)} />
+        {/* Metrópoli has no self-serve rate — that card's own button label already reads
+            "Contáctanos" (see PricingCard.tsx), and clicking it skips the wizard entirely and
+            goes straight to the contact form, same as choosing "Prefiero que me contacten". */}
+        <Pricing onSelectPlan={(planId) => (planId === "metropoli" ? selectPlanAndScroll(planId) : wizard.open(planId))} />
         <ContactSection selectedPlan={selectedPlan} setSelectedPlan={setSelectedPlan} unitCount={unitCount} setUnitCount={setUnitCount} status={status} error={error} submitLead={submitLead} />
       </main>
       <Footer />

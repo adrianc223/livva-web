@@ -65,7 +65,9 @@ export function PricingCard({ plan, onSelect, matched = false, matchedTotal = nu
           matched || (!calculatorActive && plan.highlight) ? "bg-primary text-white shadow-[0_8px_20px_rgba(44,89,67,0.2)]" : "border border-border bg-transparent text-text"
         )}
       >
-        Iniciar demo
+        {/* Metrópoli has no self-serve rate (monthlyRatePerUnit === null, >120 units) — the demo
+            wizard caps out at 120, so this button skips it entirely and goes straight to contact. */}
+        {plan.monthlyRatePerUnit === null ? "Contáctanos" : "Iniciar demo"}
       </button>
     </div>
   );

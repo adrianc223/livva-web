@@ -17,8 +17,8 @@ export function ContactSection({ selectedPlan, setSelectedPlan, unitCount, setUn
     <section id="contacto" className="mx-auto max-w-[640px] px-5 py-20">
       <div className="mb-8 text-center">
         <span className="text-[11px] font-black uppercase tracking-[1.6px] text-primary">Contacto</span>
-        <h2 className="mt-2 text-[clamp(24px,3.5vw,34px)] tracking-[-1px] text-text">Contanos sobre tu comunidad</h2>
-        <p className="mt-3 text-[13px] text-text-muted">Dejanos tus datos y te contactamos para armar el plan que mejor se ajuste a tu residencial.</p>
+        <h2 className="mt-2 text-[clamp(24px,3.5vw,34px)] tracking-[-1px] text-text">Contanos sobre tu condominio</h2>
+        <p className="mt-3 text-[13px] text-text-muted">Dejanos tus datos y te contactamos para armar el plan que mejor se ajuste a tu condominio.</p>
       </div>
       {status === "sent" ? (
         <div className="rounded-2xl border border-border bg-surface p-8 text-center">

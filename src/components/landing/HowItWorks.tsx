@@ -27,7 +27,7 @@ export function HowItWorks({ onOpenWizard }: HowItWorksProps) {
       <div className="mx-auto max-w-[1100px]">
         <div className="mx-auto mb-12 max-w-[560px] text-center">
           <span className="text-[11px] font-black uppercase tracking-[1.6px] text-[#cfe3d5]">Cómo funciona</span>
-          <h2 className="mt-2 text-[clamp(24px,3.5vw,34px)] tracking-[-1px] text-white">Empezar toma minutos, no semanas</h2>
+          <h2 className="mt-2 text-[clamp(24px,3.5vw,34px)] tracking-[-1px] text-white">Configurá la administración de tu condominio en minutos, no semanas</h2>
         </div>
         <div className="grid grid-cols-1 gap-6 tablet:grid-cols-3 tablet:gap-5">
           {STEPS.map((step) => (

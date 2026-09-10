@@ -12,7 +12,7 @@ export function ValueProps() {
     <section className="mx-auto max-w-[1100px] px-5 py-20">
       <div className="mx-auto mb-12 max-w-[560px] text-center">
         <span className="text-[11px] font-black uppercase tracking-[1.6px] text-primary">Por qué Livva</span>
-        <h2 className="mt-2 text-[clamp(24px,3.5vw,34px)] tracking-[-1px] text-text">Una plataforma pensada para comunidades reales</h2>
+        <h2 className="mt-2 text-[clamp(24px,3.5vw,34px)] tracking-[-1px] text-text">Herramientas para administrar tu condominio y unir a tu comunidad</h2>
       </div>
       <div className="grid grid-cols-1 gap-4 tablet:grid-cols-2 tablet:gap-5">
         {VALUE_PROPS.map(({ icon: Icon, title, copy }) => (

@@ -6,10 +6,21 @@ Leads now reach both an email (`sendLeadNotificationEmail`) and a real `LandingL
 
 **Still not built, if ever wanted**: marking a lead "contacted"/"converted" beyond the binary new/seen state a badge already gives; anything CRM-shaped (notes, follow-up reminders, pipeline stages) — this was deliberately kept to "read the list, badge what's new, reply by email" rather than building toward a full CRM nobody asked for yet.
 
-## Custom domain
+## Custom domain — bought, but the env var was never actually finished (found 2026-09-10)
 
-No domain purchased yet — the site ships to Vercel's default `*.vercel.app` URL. When a domain is bought, update `APP_URL` in Vercel's Production env var and add the domain in the Vercel project's Domains settings; `robots.ts`/`sitemap.ts`/`layout.tsx` all read it through `src/lib/siteUrl.ts`'s single `SITE_URL` export, so no code change should be needed beyond that env var. Also regenerate `src/app/opengraph-image.png` if the domain change comes with any visual rebrand (it doesn't embed the domain itself, so a plain domain swap needs no regeneration).
+`livvaadmin.com` has been live since 2026-09-09 and the domain is added in Vercel's project settings — but the "update `APP_URL` in Vercel's Production env var" half of this exact instruction was never actually done, discovered during a live SEO audit against production: `og:url`, `sitemap.xml`, and `robots.txt`'s `Sitemap:` line were all still serving the old `*.vercel.app` domain in production. `src/lib/siteUrl.ts`'s own fallback has been updated to `https://livvaadmin.com` (so a missing env var degrades correctly from now on), but **the real Production `APP_URL` env var in Vercel still needs to be set by hand and redeployed** — a real env-var-set-a-value-always-wins-over-a-code-fallback fact, not something fixable from a code session. Do this before treating any of the SEO work below as fully live.
 
-## Structured data (JSON-LD)
+## Structured data (JSON-LD) — done (2026-09-10)
 
-Not added yet — see CLAUDE.md's "SEO & accessibility" section. Worth adding an `Organization` (and maybe `Product`, once pricing is final) JSON-LD block once a real domain is bought; low value before then since it's mostly a ranking/rich-result signal tied to a stable, indexed domain.
+`Organization` + `SoftwareApplication` (`@graph`) sitewide in `layout.tsx`, plus a page-specific `FAQPage` on `/preguntas-frecuentes` — see CLAUDE.md's "SEO & accessibility" section for what each contains and why pricing is represented as an `AggregateOffer` rather than a single fabricated price.
+
+## SEO/GEO audit and content expansion — done (2026-09-10)
+
+A live audit (using the new cross-repo `seo` agent + `seo-audit` skill from Condo-Admin-Tool — see that repo's own CLAUDE.md) against the real production site found the domain/canonical bug above, a zero-keyword copy problem (confirmed against 3 real Costa Rican competitor sites), missing structured data, and zero bottom-of-funnel content. User approved a concrete plan; shipped: rewritten title/description/h1/section headings (keyword-first, mission voice kept as framing rather than dropped), the JSON-LD above, and two new content pages (`/preguntas-frecuentes`, `/livva-vs-excel-whatsapp`) — see CLAUDE.md's "SEO & accessibility" section for the full detail.
+
+**Still open, flagged but not done in this pass**:
+- The `APP_URL` production env var fix above (blocks the domain/canonical/sitemap fix from being fully live).
+- A real WCAG AA contrast failure in the `--color-text-muted` token at small sizes — flagged for `frontend`/`ui-ux`.
+- Mobile LCP (3.6s measured, lab data, against a 2.5s target) and ~414KB of wasted image bytes in `Features.tsx`'s screenshot carousel — flagged for `frontend`; the `next/image` tradeoff this project's own CLAUDE.md already flagged as "revisit if it becomes a measured problem" has now measurably become one.
+- A dedicated follow-up pass to identify real SaaS *software* competitors (not just condo-administration *service* companies like ADICON/Macondo/ADMINSA) — the original audit's network connectivity was interrupted before this could be completed.
+- Google Business Profile + Costa Rican business-directory listings (ASOCONDO, the Cámara de Construcción's directory) — a distribution/GEO lever, not a code task; ~85% of AI-assistant brand mentions come from third-party pages, not the owned site, per the `seo-audit` skill's research.

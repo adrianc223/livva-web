@@ -24,11 +24,18 @@ export function Hero({ onOpenWizard }: HeroProps) {
             <Logo variant="dark" className="h-11 w-auto" /> livva
           </div>
           <div className="max-w-[520px] tablet:max-w-[480px]">
-            <span className="text-[11px] font-black uppercase tracking-[1.6px] text-[#cfe3d5]">La plataforma para tu comunidad</span>
-            <h1 className="mb-4 mt-3 text-[clamp(36px,6vw,58px)] leading-[0.98] tracking-[-2.6px] tablet:tracking-[-2.8px]">Uniendo comunidades</h1>
+            {/* 2026-09-10, SEO audit (Hero copy option B, user-approved): the eyebrow/h1 used to be
+                "La plataforma para tu comunidad" / "Uniendo comunidades" — pure brand voice, zero
+                of the actual keywords a Costa Rican administrator searches ("condominio",
+                "administración", "Costa Rica" appeared nowhere in the h1). This keeps the mission
+                framing (it's still the load-bearing verb in the h1) while leading the eyebrow and
+                body copy with the real category/keyword. */}
+            <span className="text-[11px] font-black uppercase tracking-[1.6px] text-[#cfe3d5]">Uniendo comunidades</span>
+            <h1 className="mb-4 mt-3 text-[clamp(36px,6vw,58px)] leading-[0.98] tracking-[-2.6px] tablet:tracking-[-2.8px]">Administrá tu condominio y uní a tu comunidad</h1>
             <p className="text-[15px] leading-relaxed text-[#dcecdf]">
-              Livva conecta a residentes, administradores y comercios locales en una sola plataforma:
-              cuotas, anuncios, reservas, mensajería y un marketplace interno, sin hojas de cálculo ni grupos de chat sueltos.
+              Livva es la plataforma de administración de condominios en Costa Rica: cuotas, anuncios, reservas, mensajería
+              y un marketplace interno para residentes, administradores y comercios locales — sin hojas de cálculo ni
+              grupos de chat sueltos. Porque una comunidad bien organizada es una comunidad más unida.
             </p>
             {/* 2026-09-10, UI/UX audit fix: the wizard (this site's own highest-converting path,
                 per Header.tsx's comment) used to be unreachable from the Hero at all — the only

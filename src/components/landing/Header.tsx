@@ -2,13 +2,19 @@
 
 import { useState } from "react";
 import { Menu, Sparkles, X } from "lucide-react";
+import Link from "next/link";
 import { Logo } from "@/components/Logo";
 
+// Absolute-path anchors ("/#funciones", not bare "#funciones") — 2026-09-10, needed once this
+// site grew real subpages (/preguntas-frecuentes, /livva-vs-excel-whatsapp): a bare "#funciones"
+// only ever scrolls within the *current* page, so from a subpage (which has no element with that
+// id) it silently does nothing. "/#funciones" navigates home first when needed, and is a no-op
+// same-page hash jump when already on "/" — same behavior as before there, no regression.
 const NAV_LINKS = [
-  { href: "#funciones", label: "Funciones" },
-  { href: "#seguridad", label: "Seguridad" },
-  { href: "#planes", label: "Planes" },
-  { href: "#contacto", label: "Contacto" },
+  { href: "/#funciones", label: "Funciones" },
+  { href: "/#seguridad", label: "Seguridad" },
+  { href: "/#planes", label: "Planes" },
+  { href: "/#contacto", label: "Contacto" },
 ];
 
 type HeaderProps = { onOpenWizard: () => void };
@@ -26,12 +32,12 @@ export function Header({ onOpenWizard }: HeaderProps) {
             so repeating it in the sticky header read as redundant. Kept below that breakpoint,
             where this is the only brand anchor (the Hero's own small mark below tablet was
             removed as a duplicate — see Hero.tsx's 2026-09-10 comment). */}
-        <a href="#inicio" className="flex items-center gap-2 text-[17px] font-black text-text tablet:hidden">
+        <Link href="/#inicio" className="flex items-center gap-2 text-[17px] font-black text-text tablet:hidden">
           <Logo variant="auto" className="h-7 w-auto" /> livva
-        </a>
+        </Link>
         <nav className="hidden items-center gap-7 text-[13px] font-bold text-text-muted tablet:flex">
           {NAV_LINKS.map((link) => (
-            <a key={link.href} href={link.href} className="hover:text-text">{link.label}</a>
+            <Link key={link.href} href={link.href} className="hover:text-text">{link.label}</Link>
           ))}
         </nav>
         <div className="flex items-center gap-2.5">
@@ -49,12 +55,12 @@ export function Header({ onOpenWizard }: HeaderProps) {
           >
             <Sparkles size={14} /> Iniciar demo
           </button>
-          <a
-            href="#contacto"
+          <Link
+            href="/#contacto"
             className="hidden min-h-[44px] items-center rounded-[10px] border border-primary/30 bg-transparent px-4 py-2.5 text-[12px] font-black text-primary tablet:flex"
           >
             Contáctanos
-          </a>
+          </Link>
           {/* Tap target bumped to a full 44x44px square (was measuring 40px tall as a plain
               text link before this fix) — same 2026-09-10 audit pass. */}
           <button
@@ -71,22 +77,22 @@ export function Header({ onOpenWizard }: HeaderProps) {
       {mobileMenuOpen && (
         <nav className="flex flex-col gap-1 border-t border-border bg-background px-5 py-3 tablet:hidden">
           {NAV_LINKS.map((link) => (
-            <a
+            <Link
               key={link.href}
               href={link.href}
               onClick={() => setMobileMenuOpen(false)}
               className="rounded-[8px] px-2 py-3 text-[13px] font-bold text-text-muted hover:bg-surface-muted hover:text-text"
             >
               {link.label}
-            </a>
+            </Link>
           ))}
-          <a
-            href="#contacto"
+          <Link
+            href="/#contacto"
             onClick={() => setMobileMenuOpen(false)}
             className="rounded-[8px] px-2 py-3 text-[13px] font-black text-primary hover:bg-surface-muted"
           >
             Contáctanos
-          </a>
+          </Link>
         </nav>
       )}
     </header>

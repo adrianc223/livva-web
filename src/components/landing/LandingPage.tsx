@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { ContactSection } from "./ContactSection";
 import { DemoPromo } from "./DemoPromo";
 import { DemoWizard } from "./DemoWizard";
@@ -8,6 +9,7 @@ import { Footer } from "./Footer";
 import { Header } from "./Header";
 import { Hero } from "./Hero";
 import { HowItWorks } from "./HowItWorks";
+import { LegalModal } from "./LegalModal";
 import { MobileShowcase } from "./MobileShowcase";
 import { Pricing } from "./Pricing";
 import { Security } from "./Security";
@@ -18,6 +20,9 @@ import { useLeadForm } from "./hooks/useLeadForm";
 export function LandingPage() {
   const { selectedPlan, setSelectedPlan, unitCount, setUnitCount, selectPlanAndScroll, status, error, submitLead } = useLeadForm();
   const wizard = useDemoWizard(selectPlanAndScroll);
+  // Static Terms/Security content, ported from Condo-Admin-Tool's own LegalModal.tsx — same
+  // "terms" | "security" | null state shape and sibling-modal placement that app already uses.
+  const [legalModal, setLegalModal] = useState<"terms" | "security" | null>(null);
 
   return (
     <>
@@ -28,7 +33,7 @@ export function LandingPage() {
         <DemoPromo onOpenWizard={() => wizard.open()} />
         <Features />
         <MobileShowcase />
-        <HowItWorks />
+        <HowItWorks onOpenWizard={() => wizard.open()} />
         <Security />
         {/* Metrópoli has no self-serve rate — that card's own button label already reads
             "Contáctanos" (see PricingCard.tsx), and clicking it skips the wizard entirely and
@@ -36,8 +41,9 @@ export function LandingPage() {
         <Pricing onSelectPlan={(planId) => (planId === "metropoli" ? selectPlanAndScroll(planId) : wizard.open(planId))} />
         <ContactSection selectedPlan={selectedPlan} setSelectedPlan={setSelectedPlan} unitCount={unitCount} setUnitCount={setUnitCount} status={status} error={error} submitLead={submitLead} />
       </main>
-      <Footer />
+      <Footer onOpenTerms={() => setLegalModal("terms")} onOpenSecurity={() => setLegalModal("security")} />
       <DemoWizard {...wizard} />
+      {legalModal && <LegalModal topic={legalModal} onClose={() => setLegalModal(null)} />}
     </>
   );
 }

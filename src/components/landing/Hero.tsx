@@ -53,6 +53,10 @@ export function Hero({ onOpenWizard }: HeroProps) {
                 Ver planes <ArrowRight size={16} />
               </a>
             </div>
+            {/* 2026-09-10: reinforces the self-serve pitch right under the CTA without adding a
+                second competing button (see the comment above on why "Solicitar información" was
+                dropped from here) — just a microcopy line under the one action. */}
+            <p className="mt-3 text-center text-[11px] text-[#cfe3d5] tablet:text-left">Sin tarjeta, sin instalaciones — accedés al instante con solo un clic.</p>
           </div>
         </div>
         <div className="relative hidden tablet:block">

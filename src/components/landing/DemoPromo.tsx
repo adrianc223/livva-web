@@ -1,8 +1,8 @@
 import { ArrowRight, Sparkles, Unlock, Zap } from "lucide-react";
 
 const DEMO_POINTS = [
+  { icon: Zap, title: "Empezás con un clic", copy: "Completás un formulario de menos de un minuto y tu cuenta queda activa al instante — sin esperar a que nadie te contacte." },
   { icon: Unlock, title: "Sin compromiso", copy: "Probá Livva con tus residentes reales durante 30 días. Si no es para ustedes, no pagan nada." },
-  { icon: Zap, title: "Activación en minutos", copy: "Cargá tus unidades y empezá a usarlo el mismo día — sin instalaciones ni configuraciones largas." },
   { icon: Sparkles, title: "Fácil desde el primer día", copy: "Residentes y administración se acostumbran a Livva sin capacitaciones ni manuales." },
 ];
 
@@ -17,8 +17,8 @@ export function DemoPromo({ onOpenWizard }: { onOpenWizard: () => void }) {
       <div className="relative z-[1] mx-auto max-w-[1100px]">
         <div className="mx-auto mb-12 max-w-[560px]">
           <span className="text-[11px] font-black uppercase tracking-[1.6px] text-[#cfe3d5]">Probalo primero</span>
-          <h2 className="mt-2 text-[clamp(26px,3.8vw,36px)] tracking-[-1px] text-white">Un mes completo de Livva, sin compromiso</h2>
-          <p className="mt-3 text-[13px] leading-relaxed text-[#dcecdf]">Activá tu condominio hoy y probá Livva con tus residentes reales durante 30 días — sin tarjeta, sin contratos, sin letra pequeña.</p>
+          <h2 className="mt-2 text-[clamp(26px,3.8vw,36px)] tracking-[-1px] text-white">Empezá ahora mismo, sin compromiso</h2>
+          <p className="mt-3 text-[13px] leading-relaxed text-[#dcecdf]">Activá tu condominio con un clic y probá Livva con tus residentes reales durante 30 días — sin tarjeta, sin contratos, sin letra pequeña.</p>
         </div>
         <div className="grid grid-cols-1 gap-4 tablet:grid-cols-3">
           {DEMO_POINTS.map(({ icon: Icon, title, copy }) => (

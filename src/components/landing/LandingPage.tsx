@@ -23,9 +23,9 @@ export function LandingPage() {
     <>
       <Header onOpenWizard={() => wizard.open()} />
       <main className="flex-1">
-        <Hero />
+        <Hero onOpenWizard={() => wizard.open()} />
         <ValueProps />
-        <DemoPromo />
+        <DemoPromo onOpenWizard={() => wizard.open()} />
         <Features />
         <MobileShowcase />
         <HowItWorks />

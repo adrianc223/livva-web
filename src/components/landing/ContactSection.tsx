@@ -5,7 +5,10 @@ import { PRICING_PLANS } from "@/lib/pricing";
 import type { useLeadForm } from "./hooks/useLeadForm";
 
 const labelClass = "mb-1.5 block text-[11px] font-extrabold text-text-muted";
-const inputClass = "w-full rounded-[9px] border border-border bg-surface p-3 text-[13px] text-text outline-0 focus:border-primary focus:shadow-[0_0_0_3px_var(--color-primary-soft)]";
+// text-[16px], not the site's usual smaller sizes (2026-09-10, UI/UX audit fix) — anything
+// smaller triggers iOS Safari's auto-zoom-on-focus on this form's inputs, a jarring surprise on
+// exactly the device most first-time visitors are on.
+const inputClass = "w-full rounded-[9px] border border-border bg-surface p-3 text-[16px] text-text outline-0 focus:border-primary focus:shadow-[0_0_0_3px_var(--color-primary-soft)]";
 
 type ContactSectionProps = Pick<ReturnType<typeof useLeadForm>, "selectedPlan" | "setSelectedPlan" | "unitCount" | "setUnitCount" | "status" | "error" | "submitLead">;
 

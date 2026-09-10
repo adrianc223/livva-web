@@ -10,9 +10,10 @@ const DEMO_POINTS = [
 // same dark-green language as Hero.tsx, so this reads as the site's other "make it pop" moment,
 // not a random one-off. Light-on-dark for the section itself; the point-cards flip back to
 // white so they pop with real contrast against the dark band instead of blending into it.
-export function DemoPromo() {
+// dark:bg-[#16261d] — see HowItWorks.tsx's comment on the same fix.
+export function DemoPromo({ onOpenWizard }: { onOpenWizard: () => void }) {
   return (
-    <section className="after:content-[''] relative overflow-hidden bg-[#1f3d2f] px-5 py-20 text-center after:absolute after:-left-[130px] after:-top-[130px] after:h-[340px] after:w-[340px] after:rounded-full after:border after:border-white/20 after:shadow-[0_0_0_32px_rgba(255,255,255,0.06),0_0_0_64px_rgba(255,255,255,0.04)]">
+    <section className="after:content-[''] relative overflow-hidden bg-[#1f3d2f] px-5 py-20 text-center after:absolute after:-left-[130px] after:-top-[130px] after:h-[340px] after:w-[340px] after:rounded-full after:border after:border-white/20 after:shadow-[0_0_0_32px_rgba(255,255,255,0.06),0_0_0_64px_rgba(255,255,255,0.04)] dark:bg-[#16261d]">
       <div className="relative z-[1] mx-auto max-w-[1100px]">
         <div className="mx-auto mb-12 max-w-[560px]">
           <span className="text-[11px] font-black uppercase tracking-[1.6px] text-[#cfe3d5]">Probalo primero</span>
@@ -29,12 +30,16 @@ export function DemoPromo() {
           ))}
         </div>
         <div className="mt-10">
-          <a
-            href="#planes"
+          {/* Opens the demo wizard directly (2026-09-10, UI/UX audit fix) — this section's whole
+              pitch is "probalo gratis ahora," so its own CTA should start that, not scroll to
+              pricing (Ver planes already exists as its own path, in the Hero and nav). */}
+          <button
+            type="button"
+            onClick={onOpenWizard}
             className="inline-flex items-center gap-2 rounded-[11px] bg-white px-6 py-3.5 text-[13px] font-black text-[#1f3d2f] shadow-[0_8px_20px_rgba(0,0,0,0.2)]"
           >
-            Ver planes <ArrowRight size={16} />
-          </a>
+            Iniciar demo <ArrowRight size={16} />
+          </button>
         </div>
       </div>
     </section>

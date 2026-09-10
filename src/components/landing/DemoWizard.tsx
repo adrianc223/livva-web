@@ -14,7 +14,8 @@ const ERROR_MESSAGES: Record<string, string> = {
   network: "No pudimos crear tu demo. Intentá de nuevo.",
 };
 
-const inputClass = "w-full rounded-[9px] border border-border bg-surface p-3 text-[13px] text-text outline-0 focus:border-primary focus:shadow-[0_0_0_3px_var(--color-primary-soft)]";
+// text-[16px] — see ContactSection.tsx's comment on the same iOS-auto-zoom fix.
+const inputClass = "w-full rounded-[9px] border border-border bg-surface p-3 text-[16px] text-text outline-0 focus:border-primary focus:shadow-[0_0_0_3px_var(--color-primary-soft)]";
 const labelClass = "mb-1.5 block text-[11px] font-extrabold text-text-muted";
 
 export function DemoWizard(wizard: DemoWizardProps) {

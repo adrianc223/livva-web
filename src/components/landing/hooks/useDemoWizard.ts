@@ -4,6 +4,10 @@ import { resolvePlanForUnits } from "@/lib/pricing";
 export type DemoWizardStep = "choice" | "solo-form";
 export type DemoSignupErrorCode = "condominium_exists" | "account_exists" | "unit_count_exceeds_self_serve" | "network";
 export type BillingCycle = "MONTHLY" | "ANNUAL";
+// null = not shown; "prompt" = the "do you manage several condominiums?" question with
+// Cancelar/Aceptar; "password" = the follow-up step that actually proves account ownership.
+export type LinkStep = "prompt" | "password" | null;
+export type LinkErrorCode = "invalid_password" | "network";
 
 // Drives the two-step self-serve demo wizard (see
 // docs/superpowers/specs/2026-09-09-self-serve-demo-onboarding-design.md). onHandoffToContact is
@@ -24,6 +28,15 @@ export function useDemoWizard(onHandoffToContact: (planId: string, unitCount?: s
   const [submitting, setSubmitting] = useState(false);
   const [errorCode, setErrorCode] = useState<DemoSignupErrorCode | null>(null);
 
+  // "Multiple condominiums, same account" flow (see CLAUDE.md's "Self-serve demo onboarding" in
+  // Condo-Admin-Tool) — triggered when the first submit comes back "account_exists". The visitor
+  // has to actually prove they own that account (their real password) before we let a brand-new
+  // condominium get attached to it; a bare "yes I do" click on a public form isn't proof of anything.
+  const [linkStep, setLinkStep] = useState<LinkStep>(null);
+  const [linkPassword, setLinkPassword] = useState("");
+  const [linkSubmitting, setLinkSubmitting] = useState(false);
+  const [linkErrorCode, setLinkErrorCode] = useState<LinkErrorCode | null>(null);
+
   function open(planId?: string) {
     setInitialPlanId(planId);
     setStep("choice");
@@ -34,6 +47,9 @@ export function useDemoWizard(onHandoffToContact: (planId: string, unitCount?: s
     setBillingCycle("MONTHLY");
     setWebsite("");
     setErrorCode(null);
+    setLinkStep(null);
+    setLinkPassword("");
+    setLinkErrorCode(null);
     setIsOpen(true);
   }
 
@@ -64,6 +80,7 @@ export function useDemoWizard(onHandoffToContact: (planId: string, unitCount?: s
   async function submit(appUrl: string) {
     setSubmitting(true);
     setErrorCode(null);
+    setLinkStep(null);
     try {
       const response = await fetch(`${appUrl}/api/public/demo-signup`, {
         method: "POST",
@@ -72,7 +89,9 @@ export function useDemoWizard(onHandoffToContact: (planId: string, unitCount?: s
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setErrorCode((data.error as DemoSignupErrorCode) ?? "network");
+        const code = (data.error as DemoSignupErrorCode) ?? "network";
+        setErrorCode(code);
+        if (code === "account_exists") setLinkStep("prompt");
         return;
       }
       if (data.activationUrl) {
@@ -85,11 +104,51 @@ export function useDemoWizard(onHandoffToContact: (planId: string, unitCount?: s
     }
   }
 
+  // "Aceptar" on the prompt moves to asking for the password — nothing is sent to the server yet.
+  function startLinkPassword() {
+    setLinkPassword("");
+    setLinkErrorCode(null);
+    setLinkStep("password");
+  }
+
+  // "Cancelar" at either point drops the whole link flow and returns to the plain form (still
+  // showing the original account_exists message, so the visitor can just edit the email instead).
+  function cancelLink() {
+    setLinkStep(null);
+    setLinkPassword("");
+    setLinkErrorCode(null);
+  }
+
+  async function submitLink(appUrl: string) {
+    setLinkSubmitting(true);
+    setLinkErrorCode(null);
+    try {
+      const response = await fetch(`${appUrl}/api/public/demo-signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ condominiumName, adminName, adminEmail, unitCount: Number(unitCount), billingCycle, website, linkPassword }),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        setLinkErrorCode(data.error === "invalid_password" ? "invalid_password" : "network");
+        return;
+      }
+      if (data.activationUrl) {
+        window.location.href = data.activationUrl;
+      }
+    } catch {
+      setLinkErrorCode("network");
+    } finally {
+      setLinkSubmitting(false);
+    }
+  }
+
   return {
     isOpen, step, initialPlanId, open, close, chooseContact, chooseSolo,
     condominiumName, setCondominiumName, adminName, setAdminName, adminEmail, setAdminEmail,
     unitCount, setUnitCount, billingCycle, setBillingCycle, website, setWebsite,
     exceedsSelfServe, handoffToContactFromForm,
     submitting, errorCode, submit,
+    linkStep, linkPassword, setLinkPassword, linkSubmitting, linkErrorCode, startLinkPassword, cancelLink, submitLink,
   };
 }

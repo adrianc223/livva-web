@@ -9,7 +9,7 @@ type DemoWizardProps = ReturnType<typeof useDemoWizard>;
 
 const ERROR_MESSAGES: Record<string, string> = {
   condominium_exists: "Ya existe un residencial con ese nombre — probá con otro (por ejemplo, agregando la zona o el número de torre).",
-  account_exists: "Ya existe una cuenta con ese correo. Iniciá sesión en la app en vez de crear una nueva.",
+  account_exists: "Ya existe una cuenta con ese correo.",
   unit_count_exceeds_self_serve: "Para más de 120 unidades, contactanos directamente para armar un plan a medida.",
   network: "No pudimos crear tu demo. Intentá de nuevo.",
 };
@@ -38,6 +38,47 @@ export function DemoWizard(wizard: DemoWizardProps) {
             <div className="mt-6 grid gap-3">
               <button type="button" onClick={wizard.chooseSolo} className="rounded-[11px] bg-primary px-5 py-3.5 text-[13px] font-black text-white shadow-[0_8px_20px_rgba(44,89,67,0.2)]">Quiero hacerlo yo mismo</button>
               <button type="button" onClick={wizard.chooseContact} className="rounded-[11px] border border-border bg-transparent px-5 py-3.5 text-[13px] font-black text-text">Prefiero que me contacten</button>
+            </div>
+          </>
+        ) : wizard.linkStep ? (
+          <>
+            <h3 className="pr-6 text-[19px] font-extrabold text-text">¿Administrás varios condominios?</h3>
+            <p className="mt-1.5 text-[13px] text-text-muted">Con tu mismo correo podés administrar varios condominios con tu cuenta desde la aplicación.</p>
+
+            {wizard.linkStep === "password" && (
+              <div className="mt-5">
+                <label className={labelClass} htmlFor="wizard-link-password">Contraseña de tu cuenta</label>
+                <input
+                  className={inputClass}
+                  id="wizard-link-password"
+                  type="password"
+                  value={wizard.linkPassword}
+                  onChange={(event) => wizard.setLinkPassword(event.target.value)}
+                  autoFocus
+                  required
+                />
+                {wizard.linkErrorCode && (
+                  <p className="mt-2 text-[12px] font-bold text-red-600">
+                    {wizard.linkErrorCode === "invalid_password" ? "Contraseña incorrecta. Intentá de nuevo." : "No pudimos vincular el condominio. Intentá de nuevo."}
+                  </p>
+                )}
+              </div>
+            )}
+
+            <div className="mt-6 grid grid-cols-2 gap-3">
+              <button type="button" onClick={wizard.cancelLink} className="rounded-[11px] border border-border bg-transparent px-5 py-3.5 text-[13px] font-black text-text">Cancelar</button>
+              {wizard.linkStep === "prompt" ? (
+                <button type="button" onClick={wizard.startLinkPassword} className="rounded-[11px] bg-primary px-5 py-3.5 text-[13px] font-black text-white shadow-[0_8px_20px_rgba(44,89,67,0.2)]">Aceptar</button>
+              ) : (
+                <button
+                  type="button"
+                  disabled={wizard.linkSubmitting || !wizard.linkPassword}
+                  onClick={() => wizard.submitLink(appUrl)}
+                  className="rounded-[11px] bg-primary px-5 py-3.5 text-[13px] font-black text-white shadow-[0_8px_20px_rgba(44,89,67,0.2)] disabled:opacity-60"
+                >
+                  {wizard.linkSubmitting ? "Vinculando..." : "Confirmar"}
+                </button>
+              )}
             </div>
           </>
         ) : (
@@ -97,7 +138,7 @@ export function DemoWizard(wizard: DemoWizardProps) {
                 </p>
               )}
 
-              {wizard.errorCode && <p className="text-[12px] font-bold text-red-600">{ERROR_MESSAGES[wizard.errorCode] ?? ERROR_MESSAGES.network}</p>}
+              {wizard.errorCode && !wizard.linkStep && <p className="text-[12px] font-bold text-red-600">{ERROR_MESSAGES[wizard.errorCode] ?? ERROR_MESSAGES.network}</p>}
 
               {wizard.exceedsSelfServe ? (
                 <button type="button" onClick={wizard.handoffToContactFromForm} className="rounded-[11px] bg-primary px-5 py-3.5 text-[13px] font-black text-white shadow-[0_8px_20px_rgba(44,89,67,0.2)]">Contactar en su lugar</button>

@@ -7,9 +7,9 @@ import type { useLeadForm } from "./hooks/useLeadForm";
 const labelClass = "mb-1.5 block text-[11px] font-extrabold text-text-muted";
 const inputClass = "w-full rounded-[9px] border border-border bg-surface p-3 text-[13px] text-text outline-0 focus:border-primary focus:shadow-[0_0_0_3px_var(--color-primary-soft)]";
 
-type ContactSectionProps = Pick<ReturnType<typeof useLeadForm>, "selectedPlan" | "setSelectedPlan" | "status" | "error" | "submitLead">;
+type ContactSectionProps = Pick<ReturnType<typeof useLeadForm>, "selectedPlan" | "setSelectedPlan" | "unitCount" | "setUnitCount" | "status" | "error" | "submitLead">;
 
-export function ContactSection({ selectedPlan, setSelectedPlan, status, error, submitLead }: ContactSectionProps) {
+export function ContactSection({ selectedPlan, setSelectedPlan, unitCount, setUnitCount, status, error, submitLead }: ContactSectionProps) {
   return (
     <section id="contacto" className="mx-auto max-w-[640px] px-5 py-20">
       <div className="mb-8 text-center">
@@ -41,6 +41,10 @@ export function ContactSection({ selectedPlan, setSelectedPlan, status, error, s
             <select className={inputClass} id="lead-plan" name="plan" value={selectedPlan} onChange={(event) => setSelectedPlan(event.target.value)}>
               {PRICING_PLANS.map((plan) => <option key={plan.id} value={plan.id}>{plan.name} — {plan.unitsLabel}</option>)}
             </select>
+          </div>
+          <div>
+            <label className={labelClass} htmlFor="lead-units">Número de unidades (opcional)</label>
+            <input className={inputClass} id="lead-units" name="unitCount" type="number" min={1} value={unitCount} onChange={(event) => setUnitCount(event.target.value)} placeholder="Ej. 45" />
           </div>
           <div>
             <label className={labelClass} htmlFor="lead-message">Mensaje (opcional)</label>

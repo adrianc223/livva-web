@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
   if (!body) return NextResponse.json({ error: "Solicitud inválida." }, { status: 400 });
 
-  const { name, community, email, plan, message, website } = body as Record<string, unknown>;
+  const { name, community, email, plan, unitCount, message, website } = body as Record<string, unknown>;
 
   // Honeypot: a real visitor never fills this hidden field — a bot that fills every field does.
   if (typeof website === "string" && website.trim() !== "") {
@@ -20,6 +20,7 @@ export async function POST(request: NextRequest) {
   if (typeof community !== "string" || !community.trim() || community.length > MAX_LENGTH) return NextResponse.json({ error: "Residencial inválido." }, { status: 400 });
   if (typeof email !== "string" || !EMAIL_RE.test(email) || email.length > MAX_LENGTH) return NextResponse.json({ error: "Correo inválido." }, { status: 400 });
   if (typeof message === "string" && message.length > MAX_LENGTH) return NextResponse.json({ error: "Mensaje demasiado largo." }, { status: 400 });
+  if (unitCount !== undefined && unitCount !== null && (typeof unitCount !== "number" || !Number.isFinite(unitCount) || unitCount <= 0)) return NextResponse.json({ error: "Número de unidades inválido." }, { status: 400 });
 
   const selectedPlan = PRICING_PLANS.find((p) => p.id === plan);
   const planLabel = selectedPlan ? `${selectedPlan.name} (${selectedPlan.unitsLabel})` : "Sin especificar";
@@ -52,7 +53,7 @@ export async function POST(request: NextRequest) {
       const forwarded = await fetch(`${masterUrl}/api/public/leads`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${secret}` },
-        body: JSON.stringify({ name: trimmedName, community: trimmedCommunity, email: trimmedEmail, plan: selectedPlan?.id ?? null, message: trimmedMessage }),
+        body: JSON.stringify({ name: trimmedName, community: trimmedCommunity, email: trimmedEmail, plan: selectedPlan?.id ?? null, unitCount: typeof unitCount === "number" ? unitCount : null, message: trimmedMessage }),
       });
       if (!forwarded.ok) console.warn("[leads] El dashboard master rechazó el lead:", forwarded.status, await forwarded.text().catch(() => ""));
     } catch (error) {

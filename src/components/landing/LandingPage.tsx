@@ -14,7 +14,7 @@ import { ValueProps } from "./ValueProps";
 import { useLeadForm } from "./hooks/useLeadForm";
 
 export function LandingPage() {
-  const { selectedPlan, setSelectedPlan, selectPlanAndScroll, status, error, submitLead } = useLeadForm();
+  const { selectedPlan, setSelectedPlan, unitCount, setUnitCount, selectPlanAndScroll, status, error, submitLead } = useLeadForm();
 
   return (
     <>
@@ -28,7 +28,7 @@ export function LandingPage() {
         <HowItWorks />
         <Security />
         <Pricing onSelectPlan={selectPlanAndScroll} />
-        <ContactSection selectedPlan={selectedPlan} setSelectedPlan={setSelectedPlan} status={status} error={error} submitLead={submitLead} />
+        <ContactSection selectedPlan={selectedPlan} setSelectedPlan={setSelectedPlan} unitCount={unitCount} setUnitCount={setUnitCount} status={status} error={error} submitLead={submitLead} />
       </main>
       <Footer />
     </>

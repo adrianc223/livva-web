@@ -1,7 +1,26 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Check } from "lucide-react";
 import { PRICING_PLANS, resolvePlanForUnits } from "@/lib/pricing";
+
+// Every plan gets every feature — the only thing a tier changes is how many units you are
+// administering. This list used to be a five-item checklist printed identically inside all three
+// cards (see PricingCard.tsx), which read as "look for what your tier is missing." Stated once,
+// as a band under the grid, the same fact becomes the argument it always was, and there is room
+// to name the whole product instead of an abbreviated five.
+const INCLUDED_EVERYWHERE = [
+  "Cuotas y pagos",
+  "Cuotas extraordinarias por tractos",
+  "Anuncios a la comunidad",
+  "Mensajería con la administración",
+  "Reservas de amenidades",
+  "Documentos: reglamento y actas",
+  "Marketplace del condominio",
+  "Reportes en PDF",
+  "Notificaciones push",
+  "App instalable en el celular",
+];
 import { PricingCalculator } from "./PricingCalculator";
 import { PricingCard } from "./PricingCard";
 
@@ -56,6 +75,17 @@ export function Pricing({ onSelectPlan }: { onSelectPlan: (planId: string) => vo
               />
             </div>
           ))}
+        </div>
+        <div className="mt-4 rounded-2xl border border-border bg-surface p-7 tablet:mt-10">
+          <div className="text-center">
+            <h3 className="text-[17px] font-extrabold text-text">Todas las funciones, en todos los planes</h3>
+            <p className="mx-auto mt-2 max-w-[520px] text-[12px] text-text-muted">No guardamos funciones para un plan más caro. Un condominio de 12 casas usa exactamente el mismo Livva que uno de 300 — lo único que cambia es cuántas unidades administrás.</p>
+          </div>
+          <ul className="mt-6 grid gap-x-5 gap-y-2.5 tablet:grid-cols-2">
+            {INCLUDED_EVERYWHERE.map((item) => (
+              <li key={item} className="flex items-center gap-2 text-[12px] font-semibold text-text"><Check size={14} className="shrink-0 text-primary" /> {item}</li>
+            ))}
+          </ul>
         </div>
         <p className="mt-8 text-center text-[12px] text-text-muted">¿Administrás varios condominios o un portafolio más grande? <a href="#contacto" className="font-bold text-primary">Hablemos</a>.</p>
       </div>

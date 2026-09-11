@@ -1,8 +1,6 @@
 import clsx from "clsx";
 import { Check } from "lucide-react";
-import { ANNUAL_DISCOUNT_PERCENT, formatColones, type PricingPlan } from "@/lib/pricing";
-
-const INCLUDED = ["Cuotas y pagos", "Anuncios y mensajería", "Reservas de amenidades", "Marketplace interno", "App instalable"];
+import { ANNUAL_DISCOUNT_PERCENT, formatColones, resolvePlanForUnits, type PricingPlan } from "@/lib/pricing";
 
 type PricingCardProps = {
   plan: PricingPlan;
@@ -24,6 +22,11 @@ type PricingCardProps = {
 };
 
 export function PricingCard({ plan, onSelect, matched = false, matchedTotal = null, calculatorActive = false }: PricingCardProps) {
+  // Computed, never hardcoded, so the worked example can never contradict the calculator sitting
+  // directly above these cards. Metrópoli has no rate of its own, so its example count (120) is
+  // the top of the tier below — a real "starting from" figure rather than an invented one.
+  const { monthlyTotal: exampleTotal } = resolvePlanForUnits(plan.exampleUnits);
+
   return (
     <div
       className={clsx(
@@ -52,11 +55,33 @@ export function PricingCard({ plan, onSelect, matched = false, matchedTotal = nu
         <p className="mt-5 text-[26px] font-black tracking-[-1px] text-text">Personalizado</p>
       )}
       <span className="mt-4 inline-flex w-fit items-center gap-1.5 rounded-full border border-primary/30 px-2.5 py-1 text-[10px] font-black text-primary"><Check size={12} className="shrink-0" /> 1 mes de demo incluido</span>
-      <ul className="my-6 grid gap-2.5">
-        {INCLUDED.map((item) => (
-          <li key={item} className="flex items-center gap-2 text-[12px] font-semibold text-text"><Check size={14} className="shrink-0 text-primary" /> {item}</li>
-        ))}
-      </ul>
+      {/* This used to be the same five-item feature checklist on all three cards. A checklist
+          repeated verbatim down every column is the shape readers know from tiered SaaS pricing,
+          where it exists to show what each tier withholds — so printing an identical one three
+          times told people to hunt for a difference that does not exist, and buried the actual
+          selling point. "Everything is included in every plan" is now stated once, below the
+          grid (Pricing.tsx), and each card uses the space to say something only true of itself:
+          how its rate is applied, and what a real condominium of that size actually pays. */}
+      <div className="my-6 grid gap-3 border-y border-border py-5">
+        <p className="text-[10px] font-black uppercase tracking-[1.2px] text-text-muted">Cómo se calcula</p>
+        <p className="text-[12px] leading-relaxed text-text">{plan.rateExplainer}</p>
+        {/* The example steps aside once the calculator has matched this card: the headline above
+            is then the reader's own real total, and a second, larger figure for someone else's
+            building sitting under it is the one thing that could make their own number unclear.
+            The explainer stays — at that exact moment it is what tells them how their total was
+            reached. Metrópoli is never matched (the calculator has no rate past 120), so its
+            "Desde" figure always shows.
+
+            whitespace-nowrap on both halves plus flex-wrap on the row: without them the *text*
+            breaks before the flex line does, and a narrow card ends up with both sides split
+            across two ragged lines instead of one clean line each. */}
+        {!matched && (
+          <p className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1 rounded-[10px] bg-surface-muted px-3 py-2.5">
+            <span className="whitespace-nowrap text-[11px] font-bold text-text-muted">{plan.monthlyRatePerUnit === null ? "Desde" : "Ejemplo"} · {plan.exampleUnits} unidades</span>
+            <strong className="whitespace-nowrap text-[13px] font-black text-text">{formatColones(exampleTotal ?? 0)}<span className="text-[10px] font-bold text-text-muted"> / mes</span></strong>
+          </p>
+        )}
+      </div>
       <button
         type="button"
         onClick={() => onSelect(plan.id)}

@@ -15,14 +15,28 @@ export type PricingPlan = {
   maxUnits: number | null;
   monthlyRatePerUnit: number | null;
   highlight?: boolean;
+  /**
+   * One sentence saying what this tier's rate actually applies to. The graduated model is the
+   * single most misread thing on this page: Comunidad's headline rate invites a reader to
+   * multiply it by their unit count, which is not what they would be charged, because their
+   * first 30 units stay at Esencial's rate. Saying so on the card is cheaper than letting
+   * someone discover it at signup.
+   */
+  rateExplainer: string;
+  /**
+   * A representative unit count inside this tier. The card turns it into a worked total through
+   * resolvePlanForUnits, never a hardcoded figure — a worked example that can drift from the
+   * calculator sitting directly above it is worse than no example at all.
+   */
+  exampleUnits: number;
 };
 
 export const ANNUAL_DISCOUNT_PERCENT = 12;
 
 export const PRICING_PLANS: PricingPlan[] = [
-  { id: "esencial", name: "Esencial", unitsLabel: "Hasta 30 unidades", maxUnits: 30, monthlyRatePerUnit: 1500 },
-  { id: "comunidad", name: "Comunidad", unitsLabel: "31 a 120 unidades", maxUnits: 120, monthlyRatePerUnit: 1400, highlight: true },
-  { id: "metropoli", name: "Metrópoli", unitsLabel: "Más de 120 unidades", maxUnits: null, monthlyRatePerUnit: null },
+  { id: "esencial", name: "Esencial", unitsLabel: "Hasta 30 unidades", maxUnits: 30, monthlyRatePerUnit: 1500, rateExplainer: "Pagás por unidad registrada. Si tu condominio tiene 18 casas, pagás 18 — no un paquete de 30.", exampleUnits: 18 },
+  { id: "comunidad", name: "Comunidad", unitsLabel: "31 a 120 unidades", maxUnits: 120, monthlyRatePerUnit: 1400, highlight: true, rateExplainer: "Esta tarifa aplica de la unidad 31 en adelante; las primeras 30 se mantienen en ₡1 500. Crecer nunca te sube el precio de golpe.", exampleUnits: 60 },
+  { id: "metropoli", name: "Metrópoli", unitsLabel: "Más de 120 unidades", maxUnits: null, monthlyRatePerUnit: null, rateExplainer: "Pasando las 120 unidades el precio lo conversamos con vos. Lo de abajo es el punto de partida, no el techo.", exampleUnits: 120 },
 ];
 
 export function formatColones(amount: number): string {

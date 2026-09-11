@@ -33,9 +33,24 @@ export type PricingPlan = {
 
 export const ANNUAL_DISCOUNT_PERCENT = 12;
 
+// **The per-unit rates are derived from the published price, not the other way round**
+// (2026-09-11). Prices are advertised with IVA included, so what a visitor reads is
+// totalWithIva(rate): ₡1,504 and ₡1,416 exist precisely because they produce a clean ₡1,700 and
+// ₡1,600 on the card. Round *bases* (the old ₡1,500/₡1,400) published ₡1,695/₡1,582, which reads
+// as computed rather than chosen. Do not "tidy" these back to round hundreds. Kept in sync by
+// hand with Condo-Admin-Tool's annualPricing.ts, whose test pins the ₡1,700/₡1,600 result — this
+// repo has no test suite, so that one is the only guard for both.
+//
+// The per-unit rate is round; the example totals are not, and that is unavoidable. Graduating the
+// *published* total and deriving the base was tried and rejected — for 14 of the 120 reachable
+// unit counts no integer base yields the round total (at 6 units, 13% skips ₡10,200 entirely),
+// so the page would advertise a figure the invoice misses by ₡1.
+//
+// rateExplainer is prose and names a rate as a literal, so it does NOT follow the rate
+// automatically: edit it whenever a tier or the IVA treatment changes.
 export const PRICING_PLANS: PricingPlan[] = [
-  { id: "esencial", name: "Esencial", unitsLabel: "Hasta 30 unidades", maxUnits: 30, monthlyRatePerUnit: 1500, rateExplainer: "Pagás por unidad registrada. Si tu condominio tiene 18 casas, pagás 18 — no un paquete de 30.", exampleUnits: 18 },
-  { id: "comunidad", name: "Comunidad", unitsLabel: "31 a 120 unidades", maxUnits: 120, monthlyRatePerUnit: 1400, highlight: true, rateExplainer: "Esta tarifa aplica de la unidad 31 en adelante; las primeras 30 se mantienen en ₡1 695. Crecer nunca te sube el precio de golpe.", exampleUnits: 60 },
+  { id: "esencial", name: "Esencial", unitsLabel: "Hasta 30 unidades", maxUnits: 30, monthlyRatePerUnit: 1504, rateExplainer: "Pagás por unidad registrada. Si tu condominio tiene 18 casas, pagás 18 — no un paquete de 30.", exampleUnits: 18 },
+  { id: "comunidad", name: "Comunidad", unitsLabel: "31 a 120 unidades", maxUnits: 120, monthlyRatePerUnit: 1416, highlight: true, rateExplainer: "Esta tarifa aplica de la unidad 31 en adelante; las primeras 30 se mantienen en ₡1 700. Crecer nunca te sube el precio de golpe.", exampleUnits: 60 },
   { id: "metropoli", name: "Metrópoli", unitsLabel: "Más de 120 unidades", maxUnits: null, monthlyRatePerUnit: null, rateExplainer: "Pasando las 120 unidades el precio lo conversamos con vos. Lo de abajo es el punto de partida, no el techo.", exampleUnits: 120 },
 ];
 

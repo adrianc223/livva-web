@@ -1,4 +1,5 @@
 import { Layers, MessageCircleHeart, ShieldCheck, Wallet } from "lucide-react";
+import Link from "next/link";
 
 const VALUE_PROPS = [
   { icon: Layers, title: "Todo en un solo lugar", copy: "Cuotas, anuncios, reservas y mensajería en una sola plataforma, sin depender de hojas de cálculo o grupos de chat." },
@@ -23,6 +24,12 @@ export function ValueProps() {
           </div>
         ))}
       </div>
+      {/* The comparison page existed for a while linked only from the footer. This is where a
+          reader who just recognised their own spreadsheet is most likely to want it. */}
+      <p className="mt-6 text-[13px] text-text-muted">
+        ¿Hoy lo llevás en Excel y WhatsApp?{" "}
+        <Link href="/livva-vs-excel-whatsapp" className="font-bold text-primary hover:underline">Mirá qué cambia con Livva</Link>.
+      </p>
     </section>
   );
 }

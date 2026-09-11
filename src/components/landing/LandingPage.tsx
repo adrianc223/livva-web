@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Differentiation } from "./Differentiation";
 import { ContactSection } from "./ContactSection";
 import { DemoPromo } from "./DemoPromo";
 import { DemoWizard } from "./DemoWizard";
@@ -35,6 +36,9 @@ export function LandingPage() {
         <MobileShowcase />
         <HowItWorks onOpenWizard={() => wizard.open()} />
         <Security />
+        {/* Sits immediately before the price so it frames the number rather than competing with
+            it — "¿por qué esta y no otra?" answered while the reader is deciding, not after. */}
+        <Differentiation />
         {/* Metrópoli has no self-serve rate — that card's own button label already reads
             "Contáctanos" (see PricingCard.tsx), and clicking it skips the wizard entirely and
             goes straight to the contact form, same as choosing "Prefiero que me contacten". */}

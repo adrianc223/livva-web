@@ -10,10 +10,16 @@ import { Logo } from "@/components/Logo";
 // only ever scrolls within the *current* page, so from a subpage (which has no element with that
 // id) it silently does nothing. "/#funciones" navigates home first when needed, and is a no-op
 // same-page hash jump when already on "/" — same behavior as before there, no regression.
+//
+// "Comparativa" and "Preguntas" are real subpages that existed for a while reachable **only from
+// the footer** — the best-converting content on the site sat where you had to scroll past
+// everything to find it. Five links still fit the row; the mobile menu takes them regardless.
 const NAV_LINKS = [
   { href: "/#funciones", label: "Funciones" },
+  { href: "/livva-vs-excel-whatsapp", label: "Comparativa" },
   { href: "/#seguridad", label: "Seguridad" },
   { href: "/#planes", label: "Planes" },
+  { href: "/preguntas-frecuentes", label: "Preguntas" },
   { href: "/#contacto", label: "Contacto" },
 ];
 

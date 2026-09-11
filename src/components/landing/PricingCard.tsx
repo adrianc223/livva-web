@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { Check } from "lucide-react";
-import { ANNUAL_DISCOUNT_PERCENT, formatColones, IVA_LABEL, resolvePlanForUnits, totalWithIva, type PricingPlan } from "@/lib/pricing";
+import { ANNUAL_DISCOUNT_PERCENT, formatColones, IVA_LABEL, resolvePlanForUnits, type PricingPlan } from "@/lib/pricing";
 
 type PricingCardProps = {
   plan: PricingPlan;
@@ -45,7 +45,7 @@ export function PricingCard({ plan, onSelect, matched = false, matchedTotal = nu
         <>
           <p className="mt-5"><span className="text-[30px] font-black tracking-[-1px] text-text">{formatColones(matchedTotal)}</span><span className="text-[12px] font-bold text-text-muted"> / mes</span></p>
           <p className="mt-1 text-[11px] font-bold text-primary">-{ANNUAL_DISCOUNT_PERCENT}% pagando anual</p>
-          <p className="mt-0.5 text-[11px] text-text-muted">+ {IVA_LABEL} · pagás {formatColones(totalWithIva(matchedTotal))}</p>
+          <p className="mt-0.5 text-[11px] text-text-muted">+ {IVA_LABEL}</p>
         </>
       ) : plan.monthlyRatePerUnit !== null ? (
         <>
@@ -80,7 +80,7 @@ export function PricingCard({ plan, onSelect, matched = false, matchedTotal = nu
         {!matched && (
           <p className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1 rounded-[10px] bg-surface-muted px-3 py-2.5">
             <span className="whitespace-nowrap text-[11px] font-bold text-text-muted">{plan.monthlyRatePerUnit === null ? "Desde" : "Ejemplo"} · {plan.exampleUnits} unidades</span>
-            <strong className="whitespace-nowrap text-[13px] font-black text-text">{formatColones(totalWithIva(exampleTotal ?? 0))}<span className="text-[10px] font-bold text-text-muted"> / mes con {IVA_LABEL}</span></strong>
+            <strong className="whitespace-nowrap text-[13px] font-black text-text">{formatColones(exampleTotal ?? 0)}<span className="text-[10px] font-bold text-text-muted"> / mes + {IVA_LABEL}</span></strong>
           </p>
         )}
       </div>

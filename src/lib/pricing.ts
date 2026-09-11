@@ -78,3 +78,27 @@ export function resolveAnnualPlanForUnits(unitCount: number): { plan: PricingPla
   const annualAmount = Math.round((annualBeforeDiscount * (1 - ANNUAL_DISCOUNT_PERCENT / 100)) / 1000) * 1000;
   return { plan, monthlyTotal, annualBeforeDiscount, annualAmount };
 }
+
+// IVA. Mirrors Condo-Admin-Tool's src/lib/billing/iva.ts, hand-kept in sync the same way the
+// tiers above are — same two constants, same assumption, same caveat.
+//
+// **Published prices are the taxable base; IVA is added on top.** Until 2026-09-11 the page said
+// "₡1 500" with nothing after it, so a prospect could not tell whether that was what they would
+// pay or 88.5% of it. That ambiguity was the defect. The assumption follows Costa Rican B2B
+// convention for services and what the nearest direct competitor states on its own page, and it
+// is the reading that does not silently cut the taxable base by 11.5% without anyone deciding to.
+//
+// Flip PRICES_INCLUDE_IVA in both repos if the accountant says otherwise.
+export const IVA_RATE = 0.13;
+export const PRICES_INCLUDE_IVA = false;
+export const IVA_LABEL = `IVA ${Math.round(IVA_RATE * 100)}%`;
+
+export function ivaFor(amount: number): number {
+  if (PRICES_INCLUDE_IVA) return Math.round(amount - amount / (1 + IVA_RATE));
+  return Math.round(amount * IVA_RATE);
+}
+
+export function totalWithIva(amount: number): number {
+  return PRICES_INCLUDE_IVA ? Math.round(amount) : Math.round(amount) + ivaFor(amount);
+}
+

@@ -32,10 +32,14 @@ export function Hero({ onOpenWizard }: HeroProps) {
                 body copy with the real category/keyword. */}
             <span className="text-[11px] font-black uppercase tracking-[1.6px] text-[#cfe3d5]">Uniendo comunidades</span>
             <h1 className="mb-4 mt-3 text-[clamp(36px,6vw,58px)] leading-[0.98] tracking-[-2.6px] tablet:tracking-[-2.8px]">Administrá tu condominio y uní a tu comunidad</h1>
+            {/* Kept short on purpose (2026-09-11): at 55 words this ran seven centred lines on a
+                phone and pushed the product screenshot below two full screens. The category
+                keywords the SEO pass put here stay, and so does the marketplace — the one thing
+                no competitor has, which was buried mid-sentence before. */}
             <p className="text-[15px] leading-relaxed text-[#dcecdf]">
-              Livva es la plataforma de administración de condominios en Costa Rica: cuotas, anuncios, reservas, mensajería
-              y un marketplace interno para residentes, administradores y comercios locales — sin hojas de cálculo ni
-              grupos de chat sueltos. Porque una comunidad bien organizada es una comunidad más unida.
+              La plataforma de administración de condominios en Costa Rica. Cuotas, anuncios, reservas y mensajería en un
+              solo lugar — más un <strong className="font-bold text-white">marketplace interno</strong> entre vecinos que
+              no vas a encontrar en otra parte.
             </p>
             {/* 2026-09-10, UI/UX audit fix: the wizard (this site's own highest-converting path,
                 per Header.tsx's comment) used to be unreachable from the Hero at all — the only
@@ -66,12 +70,22 @@ export function Hero({ onOpenWizard }: HeroProps) {
             <p className="mt-3 text-center text-[11px] text-[#cfe3d5] tablet:text-left">Sin tarjeta, sin instalaciones — accedés al instante con solo un clic.</p>
           </div>
         </div>
+        {/* Below tablet this used to be `hidden`, so a phone visitor saw no product at all until
+            two screens of scrolling — on a page whose whole argument is that the product looks
+            better than a spreadsheet and a WhatsApp group. A phone frame is the honest visual at
+            that width, and it sits right under the buttons. (2026-09-11.) */}
+        <div className="mt-12 flex justify-center tablet:hidden">
+          <PhoneFrame src="/screenshots/mobile-resumen.png" alt="Resumen de Livva en el celular" className="h-[420px] w-[205px]" />
+        </div>
         <div className="relative hidden tablet:block">
-          <BrowserFrame src="/screenshots/desktop-resumen.png" alt="Resumen del condominio en Livva" className="h-[300px] w-full" />
+          {/* Was h-[300px], which `object-cover object-top` then cropped to the top third — the
+              dashboard was present but unreadable. Taller, and the phone now hangs off the outer
+              corner instead of overlapping the right third of it. */}
+          <BrowserFrame src="/screenshots/desktop-resumen.png" alt="Resumen del condominio en Livva" className="h-[420px] w-full" />
           <PhoneFrame
             src="/screenshots/mobile-resumen.png"
             alt="Resumen de Livva en el celular"
-            className="absolute -bottom-12 -right-6 h-[270px] w-[132px]"
+            className="absolute -bottom-10 -right-14 h-[300px] w-[146px]"
           />
         </div>
       </div>

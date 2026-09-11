@@ -75,17 +75,18 @@ export function Hero({ onOpenWizard }: HeroProps) {
             better than a spreadsheet and a WhatsApp group. A phone frame is the honest visual at
             that width, and it sits right under the buttons. (2026-09-11.) */}
         <div className="mt-12 flex justify-center tablet:hidden">
-          <PhoneFrame src="/screenshots/mobile-resumen.png" alt="Resumen de Livva en el celular" className="h-[420px] w-[205px]" />
+          <PhoneFrame src="/screenshots/mobile-resumen.png" alt="Resumen de Livva en el celular" className="h-[420px] w-[205px]" sizes="205px" priority />
         </div>
         <div className="relative hidden tablet:block">
           {/* Was h-[300px], which `object-cover object-top` then cropped to the top third — the
               dashboard was present but unreadable. Taller, and the phone now hangs off the outer
               corner instead of overlapping the right third of it. */}
-          <BrowserFrame src="/screenshots/desktop-resumen.png" alt="Resumen del condominio en Livva" className="h-[420px] w-full" />
+          <BrowserFrame src="/screenshots/desktop-resumen.png" alt="Resumen del condominio en Livva" className="h-[420px] w-full" sizes="(max-width: 1000px) 92vw, 520px" priority />
           <PhoneFrame
             src="/screenshots/mobile-resumen.png"
             alt="Resumen de Livva en el celular"
             className="absolute -bottom-10 -right-14 h-[300px] w-[146px]"
+            sizes="146px"
           />
         </div>
       </div>

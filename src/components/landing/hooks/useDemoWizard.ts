@@ -1,7 +1,13 @@
 import { useState } from "react";
 import { resolvePlanForUnits } from "@/lib/pricing";
 
-export type DemoWizardStep = "choice" | "solo-form";
+// "choice" (a "¿Cómo querés empezar?" gate between the button and the form) was removed on
+// 2026-09-11: it was an interstitial on the one action the whole page exists to produce, it
+// contradicted the hero's own "accedés al instante con solo un clic", and the contact route
+// it offered already existed twice on the page (the header button and the #contacto section).
+// It now survives as a text link under the form's submit, which is where an alternative
+// belongs — beside the thing it is an alternative to, not in front of it.
+export type DemoWizardStep = "solo-form";
 export type DemoSignupErrorCode = "condominium_exists" | "account_exists" | "unit_count_exceeds_self_serve" | "network";
 export type BillingCycle = "MONTHLY" | "ANNUAL";
 // null = not shown; "prompt" = the "do you manage several condominiums?" question with
@@ -15,7 +21,7 @@ export type LinkErrorCode = "invalid_password" | "network";
 // it just calls into it and closes itself.
 export function useDemoWizard(onHandoffToContact: (planId: string, unitCount?: string) => void) {
   const [isOpen, setIsOpen] = useState(false);
-  const [step, setStep] = useState<DemoWizardStep>("choice");
+  const [step, setStep] = useState<DemoWizardStep>("solo-form");
   const [initialPlanId, setInitialPlanId] = useState<string | undefined>(undefined);
 
   const [condominiumName, setCondominiumName] = useState("");
@@ -39,7 +45,7 @@ export function useDemoWizard(onHandoffToContact: (planId: string, unitCount?: s
 
   function open(planId?: string) {
     setInitialPlanId(planId);
-    setStep("choice");
+    setStep("solo-form");
     setCondominiumName("");
     setAdminName("");
     setAdminEmail("");
@@ -60,10 +66,6 @@ export function useDemoWizard(onHandoffToContact: (planId: string, unitCount?: s
   function chooseContact() {
     onHandoffToContact(initialPlanId ?? "esencial");
     close();
-  }
-
-  function chooseSolo() {
-    setStep("solo-form");
   }
 
   const parsedUnitCount = Number(unitCount);
@@ -144,7 +146,7 @@ export function useDemoWizard(onHandoffToContact: (planId: string, unitCount?: s
   }
 
   return {
-    isOpen, step, initialPlanId, open, close, chooseContact, chooseSolo,
+    isOpen, step, initialPlanId, open, close, chooseContact,
     condominiumName, setCondominiumName, adminName, setAdminName, adminEmail, setAdminEmail,
     unitCount, setUnitCount, billingCycle, setBillingCycle, website, setWebsite,
     exceedsSelfServe, handoffToContactFromForm,

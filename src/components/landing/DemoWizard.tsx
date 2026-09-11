@@ -32,16 +32,7 @@ export function DemoWizard(wizard: DemoWizardProps) {
       <div className="relative w-full max-w-[480px] rounded-2xl border border-border bg-surface p-7 shadow-[0_25px_60px_rgba(24,36,26,0.25)]">
         <button type="button" onClick={wizard.close} aria-label="Cerrar" className="absolute right-5 top-5 text-text-muted hover:text-text"><X size={18} /></button>
 
-        {wizard.step === "choice" ? (
-          <>
-            <h3 className="pr-6 text-[19px] font-extrabold text-text">¿Cómo querés empezar?</h3>
-            <p className="mt-1.5 text-[13px] text-text-muted">Podés crear tu demo ahora mismo, o dejarnos tus datos y te contactamos.</p>
-            <div className="mt-6 grid gap-3">
-              <button type="button" onClick={wizard.chooseSolo} className="rounded-[11px] bg-primary px-5 py-3.5 text-[13px] font-black text-white shadow-[0_8px_20px_rgba(44,89,67,0.2)]">Quiero hacerlo yo mismo</button>
-              <button type="button" onClick={wizard.chooseContact} className="rounded-[11px] border border-border bg-transparent px-5 py-3.5 text-[13px] font-black text-text">Prefiero que me contacten</button>
-            </div>
-          </>
-        ) : wizard.linkStep ? (
+        {wizard.linkStep ? (
           <>
             <h3 className="pr-6 text-[19px] font-extrabold text-text">¿Administrás varios condominios?</h3>
             <p className="mt-1.5 text-[13px] text-text-muted">Con tu mismo correo podés administrar varios condominios con tu cuenta desde la aplicación.</p>
@@ -149,6 +140,14 @@ export function DemoWizard(wizard: DemoWizardProps) {
                 </button>
               )}
             </div>
+            {/* The contact route the removed gate used to offer, now where an alternative belongs:
+                beside the action it is an alternative to, as a quiet link rather than a button
+                competing with the primary one. */}
+            {!wizard.exceedsSelfServe && (
+              <button type="button" onClick={wizard.chooseContact} className="mt-3 justify-self-center border-0 bg-transparent text-[12px] font-bold text-text-muted underline underline-offset-2">
+                ¿Preferís que te contactemos?
+              </button>
+            )}
           </>
         )}
       </div>

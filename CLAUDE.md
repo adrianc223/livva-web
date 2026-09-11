@@ -117,3 +117,22 @@ Same two mechanisms as Condo-Admin-Tool (2026-09-10) — see that repo's own CLA
 - Path alias `@/*` → `src/*`.
 - 5 subagents live under `.claude/agents/` (`frontend`, `backend`, `security`, `qa`, `seo`), ported from the main app and rescoped to what this single-page site actually needs.
 - **Document as you go**: update this file's relevant section in the same session you change how a section, the lead flow, or a pattern works.
+
+## Product screenshots (`public/screenshots/`)
+
+Recaptured with `scripts/capture-screenshots.mjs`, not by hand. They had been taken ad hoc, which is how the set shipping until 2026-09-11 went stale: captured 2026-09-08 from a condominium showing **₡0 collected and ₡396 000 overdue** — the marketing image of the payments feature advertised nothing collected — and carrying the Title Case bug that was fixed in the app the same day.
+
+```bash
+npm install --no-save playwright     # node_modules only; never a dependency of this project
+# with Condo-Admin-Tool's dev server running:
+CAPTURE_EMAIL=... CAPTURE_PASSWORD=... node scripts/capture-screenshots.mjs
+```
+
+The account must administer a condominium that **looks like a well-run building** — real collection for the current month, a small but non-zero morosidad, some announcements, reservations and vendors — with `tutorialsEnabled`/`pwaTutorialEnabled` off so no tour overlay lands in the frame. An empty condominium is a worse advertisement than no screenshot.
+
+Two traps the script now documents in place, both hit while writing it:
+
+- **Wait on the login *response*, not on a heading.** Waiting for `heading level 1` passes instantly, because the login screen has an `h1` too — a wait satisfied by the state you are trying to leave proves nothing, and everything after it runs against the wrong page.
+- **Playwright matches an accessible name by substring by default.** `getByRole("button", { name: "Cerrar" })` also matches **"Cerrar sesión"**, so the overlay-dismissing helper logged itself out after the first screenshot and captured the login screen for every page after. Anything dismissing an overlay by name needs `exact: true`.
+
+Captured at `deviceScaleFactor: 2` (2560×1600 and 780×1688) so they stay sharp on a retina screen now that the hero shows them large. That roughly tripled their weight, from ~800 KB to ~2.4 MB total, and they render through plain `<img>` with no Next optimization — worth revisiting (WebP, or `next/image`) if page weight starts mattering, since speed is this page's main conversion lever.

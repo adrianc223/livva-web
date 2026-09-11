@@ -35,6 +35,36 @@ const POINTS = [
     old: "Solo el administrador entiende su propia hoja de cálculo — el resto tiene que preguntar y esperar.",
     livva: "Cada residente ve el estado real de su cuenta y su comunidad, siempre actualizado, sin tener que preguntar.",
   },
+  // The five below were added 2026-09-11. The original five are the ones where a spreadsheet and
+  // a chat group *almost* work, which is the weakest ground to argue on; these are the ones where
+  // they cannot work at all. "Cambio de junta" is the strongest of the lot and was nowhere on the
+  // site: it is the number one reason a Costa Rican condominium loses its own administrative
+  // memory, and the exact moment someone goes looking for a tool.
+  {
+    area: "Cambio de junta directiva",
+    old: "La hoja se va con el tesorero que se fue, y el grupo lo administra alguien que ya ni vive aquí.",
+    livva: "La administración se transfiere en un paso y el historial del condominio se queda donde pertenece.",
+  },
+  {
+    area: "Asambleas y votaciones",
+    old: "Contar votos en un chat donde tres personas de la misma casa opinan y nadie sabe cuál cuenta.",
+    livva: "Un voto por filial, el resultado se publica al cerrar, y el acta queda guardada.",
+  },
+  {
+    area: "El reglamento y las actas",
+    old: "«¿Me pasás el reglamento?» — y alguien lo busca en un chat de hace ocho meses.",
+    livva: "Está en Documentos, y quien se mude mañana lo encuentra sin preguntarle a nadie.",
+  },
+  {
+    area: "Visitantes",
+    old: "La lista de la casetilla en una libreta, o en un chat que nadie puede buscar.",
+    livva: "Quién entró, a qué hora y quién le abrió — buscable, y los datos personales se borran solos a los 90 días.",
+  },
+  {
+    area: "Daños y mantenimiento",
+    old: "Se reporta la bomba dañada y se pierde entre mensajes; nadie sabe si alguien la vio.",
+    livva: "Un tiquete con estado y prioridad, hasta que se resuelve o se descarta — y el vecino se entera cuando cambia.",
+  },
 ];
 
 export function ComparisonPageContent() {

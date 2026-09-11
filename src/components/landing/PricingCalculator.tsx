@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { useState } from "react";
 import { Calculator } from "lucide-react";
-import { ANNUAL_DISCOUNT_PERCENT, formatColones, IVA_LABEL, resolveAnnualPlanForUnits, type PricingPlan } from "@/lib/pricing";
+import { ANNUAL_DISCOUNT_PERCENT, formatColones, ivaBreakdown, totalWithIva, resolveAnnualPlanForUnits, type PricingPlan } from "@/lib/pricing";
 
 type PricingCalculatorProps = {
   units: string;
@@ -62,11 +62,11 @@ export function PricingCalculator({ units, onUnitsChange, result }: PricingCalcu
               Para <strong className="text-text">{units}</strong> unidades: {result.monthlyTotal !== null && annualResult ? (
                 cycle === "MONTHLY" ? (
                   <>
-                    <strong className="text-[16px] text-primary">{formatColones(result.monthlyTotal)}</strong> + {IVA_LABEL} / mes con el plan <strong className="text-text">{result.plan.name}</strong>
+                    <strong className="text-[16px] text-primary">{formatColones(totalWithIva(result.monthlyTotal))}</strong> / mes con el plan <strong className="text-text">{result.plan.name}</strong> <span className="whitespace-nowrap">({ivaBreakdown(result.monthlyTotal)})</span>
                   </>
                 ) : (
                   <>
-                    <strong className="text-[16px] text-primary">{formatColones(annualResult.annualAmount ?? 0)}</strong> + {IVA_LABEL} / año con el plan <strong className="text-text">{result.plan.name}</strong> <span className="text-primary">(ahorrás {ANNUAL_DISCOUNT_PERCENT}% vs. mensual)</span>
+                    <strong className="text-[16px] text-primary">{formatColones(totalWithIva(annualResult.annualAmount ?? 0))}</strong> / año con el plan <strong className="text-text">{result.plan.name}</strong> <span className="text-primary">(ahorrás {ANNUAL_DISCOUNT_PERCENT}% vs. mensual)</span> <span className="whitespace-nowrap">({ivaBreakdown(annualResult.annualAmount ?? 0)})</span>
                   </>
                 )
               ) : (

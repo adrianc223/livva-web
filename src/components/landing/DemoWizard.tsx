@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import { X } from "lucide-react";
-import { ANNUAL_DISCOUNT_PERCENT, formatColones, resolveAnnualPlanForUnits, resolvePlanForUnits } from "@/lib/pricing";
+import { ANNUAL_DISCOUNT_PERCENT, formatColones, ivaBreakdown, totalWithIva, resolveAnnualPlanForUnits, resolvePlanForUnits } from "@/lib/pricing";
 import type { BillingCycle, useDemoWizard } from "./hooks/useDemoWizard";
 
 type DemoWizardProps = ReturnType<typeof useDemoWizard>;
@@ -120,9 +120,9 @@ export function DemoWizard(wizard: DemoWizardProps) {
                 <p className="text-[13px] leading-relaxed text-text-muted">
                   {preview.monthlyTotal !== null ? (
                     wizard.billingCycle === "MONTHLY" ? (
-                      <>Precio al terminar la demo: <strong className="text-primary">{formatColones(preview.monthlyTotal)}</strong> / mes con el plan <strong className="text-text">{preview.plan.name}</strong></>
+                      <>Precio al terminar la demo: <strong className="text-primary">{formatColones(totalWithIva(preview.monthlyTotal))}</strong> / mes con el plan <strong className="text-text">{preview.plan.name}</strong> — {ivaBreakdown(preview.monthlyTotal)}</>
                     ) : (
-                      <>Precio al terminar la demo: <strong className="text-primary">{formatColones(annualPreview.annualAmount ?? 0)}</strong> / año con el plan <strong className="text-text">{preview.plan.name}</strong> <span className="text-primary">(ahorrás {ANNUAL_DISCOUNT_PERCENT}% vs. mensual)</span></>
+                      <>Precio al terminar la demo: <strong className="text-primary">{formatColones(totalWithIva(annualPreview.annualAmount ?? 0))}</strong> / año con el plan <strong className="text-text">{preview.plan.name}</strong> <span className="text-primary">(ahorrás {ANNUAL_DISCOUNT_PERCENT}% vs. mensual)</span> — {ivaBreakdown(annualPreview.annualAmount ?? 0)}</>
                     )
                   ) : (
                     <>Plan <strong className="text-text">{preview.plan.name}</strong> — precio personalizado</>

@@ -53,7 +53,7 @@ export function Pricing({ onSelectPlan }: { onSelectPlan: (planId: string) => vo
         <div className="mx-auto mb-10 max-w-[560px] text-center">
           <span className="text-[11px] font-black uppercase tracking-[1.6px] text-primary">Planes</span>
           <h2 className="mt-2 text-[clamp(24px,3.5vw,34px)] tracking-[-1px] text-text">Precios de Livva para condominios en Costa Rica</h2>
-          <p className="mt-3 text-[13px] text-text-muted">Todas las funcionalidades incluidas sin importar el tamaño — el precio no se elige, se calcula solo según la cantidad de unidades de tu comunidad. Los precios no incluyen IVA — se le suma al monto del cobro.</p>
+          <p className="mt-3 text-[13px] text-text-muted">Todas las funcionalidades incluidas sin importar el tamaño — el precio no se elige, se calcula solo según la cantidad de unidades de tu comunidad. Los precios que ves ya incluyen el IVA del 13%: es lo que se te cobra, sin sorpresas en la factura.</p>
         </div>
         <PricingCalculator units={units} onUnitsChange={setUnits} result={result} />
         {/* overflow-x-auto forces the y-axis to clip too (same gotcha as Features.tsx's track) —

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { PRICING_PLANS } from "@/lib/pricing";
+import { PRICING_PLANS, totalWithIva } from "@/lib/pricing";
 import { SITE_URL } from "@/lib/siteUrl";
 import "./globals.css";
 
@@ -35,8 +35,13 @@ export const metadata: Metadata = {
 // blocks, per the seo-audit skill's guidance — search engines and AI crawlers parse a connected
 // graph more reliably. The pricing tiers are graduated per-unit rates (see src/lib/pricing.ts),
 // not a single flat price, so `offers` is an AggregateOffer spanning the real published per-unit
-// rates (₡1,400–1,500/unidad/mes) rather than a fabricated single "price" schema.org has no
-// clean way to represent — this stays honest about what these numbers actually mean.
+// rates rather than a fabricated single "price" schema.org has no clean way to represent — this
+// stays honest about what these numbers actually mean.
+//
+// **These carry IVA, because the pricing cards do.** Structured data that disagrees with the
+// visible page is a spam signal, not a rounding difference, so the moment the published price
+// became the with-IVA total this had to follow. Derive it here rather than hardcoding, so the
+// two cannot drift the next time a tier moves.
 const finitePlans = PRICING_PLANS.filter((plan) => plan.monthlyRatePerUnit !== null);
 const jsonLd = {
   "@context": "https://schema.org",
@@ -60,8 +65,8 @@ const jsonLd = {
       offers: {
         "@type": "AggregateOffer",
         priceCurrency: "CRC",
-        lowPrice: Math.min(...finitePlans.map((plan) => plan.monthlyRatePerUnit as number)),
-        highPrice: Math.max(...finitePlans.map((plan) => plan.monthlyRatePerUnit as number)),
+        lowPrice: Math.min(...finitePlans.map((plan) => totalWithIva(plan.monthlyRatePerUnit as number))),
+        highPrice: Math.max(...finitePlans.map((plan) => totalWithIva(plan.monthlyRatePerUnit as number))),
         offerCount: PRICING_PLANS.length,
         url: `${SITE_URL}#planes`,
       },

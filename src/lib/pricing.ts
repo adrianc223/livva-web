@@ -35,7 +35,7 @@ export const ANNUAL_DISCOUNT_PERCENT = 12;
 
 export const PRICING_PLANS: PricingPlan[] = [
   { id: "esencial", name: "Esencial", unitsLabel: "Hasta 30 unidades", maxUnits: 30, monthlyRatePerUnit: 1500, rateExplainer: "Pagás por unidad registrada. Si tu condominio tiene 18 casas, pagás 18 — no un paquete de 30.", exampleUnits: 18 },
-  { id: "comunidad", name: "Comunidad", unitsLabel: "31 a 120 unidades", maxUnits: 120, monthlyRatePerUnit: 1400, highlight: true, rateExplainer: "Esta tarifa aplica de la unidad 31 en adelante; las primeras 30 se mantienen en ₡1 500. Crecer nunca te sube el precio de golpe.", exampleUnits: 60 },
+  { id: "comunidad", name: "Comunidad", unitsLabel: "31 a 120 unidades", maxUnits: 120, monthlyRatePerUnit: 1400, highlight: true, rateExplainer: "Esta tarifa aplica de la unidad 31 en adelante; las primeras 30 se mantienen en ₡1 695. Crecer nunca te sube el precio de golpe.", exampleUnits: 60 },
   { id: "metropoli", name: "Metrópoli", unitsLabel: "Más de 120 unidades", maxUnits: null, monthlyRatePerUnit: null, rateExplainer: "Pasando las 120 unidades el precio lo conversamos con vos. Lo de abajo es el punto de partida, no el techo.", exampleUnits: 120 },
 ];
 
@@ -92,6 +92,18 @@ export function resolveAnnualPlanForUnits(unitCount: number): { plan: PricingPla
 export const IVA_RATE = 0.13;
 export const PRICES_INCLUDE_IVA = false;
 export const IVA_LABEL = `IVA ${Math.round(IVA_RATE * 100)}%`;
+
+// "₡ 45 000 + ₡ 5 850 de IVA 13%" — the line under a price shown with IVA included.
+//
+// Published prices lead with the total and carry this as the secondary line, because the buyer
+// is a condominium board paying out of condominium funds: it does not credit the IVA back the
+// way a business buyer does, so the total is its real cost and the base is trivia. The base
+// stays visible for whoever does credit it. This is a display decision and is independent of
+// PRICES_INCLUDE_IVA, which decides what the stored number means. Mirrors ivaBreakdown in
+// Condo-Admin-Tool's src/lib/billing/iva.ts.
+export function ivaBreakdown(base: number): string {
+  return `${formatColones(base)} + ${formatColones(ivaFor(base))} de ${IVA_LABEL}`;
+}
 
 export function ivaFor(amount: number): number {
   if (PRICES_INCLUDE_IVA) return Math.round(amount - amount / (1 + IVA_RATE));

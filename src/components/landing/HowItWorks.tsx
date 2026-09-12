@@ -57,6 +57,14 @@ export function HowItWorks({ onOpenWizard }: HowItWorksProps) {
           >
             <Sparkles size={16} /> Iniciar demo <ArrowRight size={16} />
           </button>
+          {/* Short section here, deep page there -- the same pattern the comparison page already
+              uses. The section answers the objection inside the main flow; the page is what can
+              rank on its own title for somebody searching "como empiezo". */}
+          <p className="mt-4 text-[13px]">
+            <a href="/como-empezar" className="font-bold text-[#cfe3d5] underline underline-offset-4">
+              Ver cómo se cargan los residentes y cómo funcionan las guías
+            </a>
+          </p>
         </div>
       </div>
     </section>

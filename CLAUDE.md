@@ -95,6 +95,18 @@ Submitting `POST`s to `` `${NEXT_PUBLIC_LIVVA_APP_URL}/api/public/demo-signup` `
 
 **El carrusel de planes escondía el plan recomendado.** Medido a 375 y a 820: Esencial 100% visible, Comunidad **23%**, Metrópoli **0%**, sin puntos, flechas ni contador — o sea, en un condominio típico el visitante de celular veía completo solo el plan que no le corresponde. Un carrusel sin afordancia de paginación es contenido escondido. Ahora: una línea "Deslizá para ver los tres planes →" debajo de `tablet`, y las tarjetas pasan a `48%` en la banda 720–1000, donde una tarjeta de 640px dentro de un viewport de 820 desperdiciaba la mitad del ancho. Medido después: a 820 quedan **100 / 100 / 5%**.
 
+## /como-empezar (2026-09-12)
+
+La página profunda para la objeción de adopción, en el mismo patrón que ya usa la comparativa: sección corta en el home que enlaza a la página que puede rankear con su propio título y canonical.
+
+**La URL se eligió descartando las alternativas por una razón que conviene no perder.** `/implementacion` y `/capacitacion` presuponen exactamente lo que la página existe para negar — una URL con "capacitación" adentro le confirma al lector que hay una capacitación que aguantar — y `/onboarding` está en inglés para un público que no busca en inglés. "Cómo empezar" es la forma en que alguien de verdad pregunta, que es lo que premian la búsqueda conversacional y la extracción por IA.
+
+- **Los tres caminos para cargar residentes son el contenido central**, y el orden es deliberado: el link de auto-registro va primero porque es el caso más común (casi ningún administrador tiene la lista de correos completa) y es el que desarma el miedo a migrar. CSV segundo, uno por uno tercero.
+- **Las guías se describen mecánicamente, no con adjetivos.** "Fácil de usar" e "intuitivo" los dice cualquiera y no los puede comprobar nadie; "la primera vez que alguien abre una pantalla, Livva le explica esa pantalla, y distinto según el rol" sí se puede comprobar. Es además lo que convierte en hecho la promesa de "sin capacitaciones ni manuales" que el sitio ya venía haciendo sin respaldo.
+- **`FAQPage`, no `HowTo`.** Google retiró los rich results de HowTo de la búsqueda, así que ese marcado no compra tratamiento visual; FAQPage conserva el rich result y además deja pares pregunta/respuesta limpios para extracción por IA.
+- **Los datos del FAQ viven en `src/lib/gettingStarted.ts`, no dentro del componente.** Las exportaciones de un módulo `"use client"` son referencias de cliente en el servidor, así que leer el arreglo a nivel de módulo para armar el JSON-LD rompe el build con "Failed to collect configuration". Misma razón por la que `faqs.ts` existe aparte.
+- **En el nav, "Cómo empezar" tomó el lugar de "Seguridad"** en vez de sumar un séptimo ítem que apretaría la barra en escritorio. Seguridad es una sección del home, alcanzable bajando y desde el pie; la comparativa y esta página no son alcanzables de ninguna otra forma.
+
 ## SEO & accessibility
 
 **Unlike the main app** (Condo-Admin-Tool, whose product is almost entirely a private, login-gated dashboard where classic SEO barely applies), **this entire site is meant to be found and indexed** — it's the public pitch for the product, so real marketing-site SEO applies in full, not just "keep the private app out of Google."

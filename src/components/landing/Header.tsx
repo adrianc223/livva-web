@@ -16,8 +16,8 @@ import { Logo } from "@/components/Logo";
 // everything to find it. Five links still fit the row; the mobile menu takes them regardless.
 const NAV_LINKS = [
   { href: "/#funciones", label: "Funciones" },
+  { href: "/como-empezar", label: "Cómo empezar" },
   { href: "/livva-vs-excel-whatsapp", label: "Comparativa" },
-  { href: "/#seguridad", label: "Seguridad" },
   { href: "/#planes", label: "Planes" },
   { href: "/preguntas-frecuentes", label: "Preguntas" },
   { href: "/#contacto", label: "Contacto" },

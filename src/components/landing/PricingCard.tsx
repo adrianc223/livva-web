@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { Check } from "lucide-react";
-import { ANNUAL_DISCOUNT_PERCENT, formatColones, ivaBreakdown, totalWithIva, resolvePlanForUnits, type PricingPlan } from "@/lib/pricing";
+import { ANNUAL_DISCOUNT_PERCENT, PRICING_PLANS, formatColones, ivaBreakdown, totalWithIva, resolvePlanForUnits, type PricingPlan } from "@/lib/pricing";
 
 type PricingCardProps = {
   plan: PricingPlan;
@@ -26,6 +26,11 @@ export function PricingCard({ plan, onSelect, matched = false, matchedTotal = nu
   // directly above these cards. Metrópoli has no rate of its own, so its example count (120) is
   // the top of the tier below — a real "starting from" figure rather than an invented one.
   const { monthlyTotal: exampleTotal } = resolvePlanForUnits(plan.exampleUnits);
+  // Display-only rounding, to the nearest ₡100 — ≤₡12 off, and never what gets charged. The
+  // charge itself is exact and lives in the calculator and at signup.
+  const roundedExampleTotal = Math.round(totalWithIva(exampleTotal ?? 0) / 100) * 100;
+  // Metrópoli has no rate of its own; what is honest to anchor on is where the top tier starts.
+  const PUBLISHED_TIER_RATE_COMUNIDAD = totalWithIva(PRICING_PLANS[1].monthlyRatePerUnit ?? 0);
 
   return (
     <div
@@ -38,7 +43,7 @@ export function PricingCard({ plan, onSelect, matched = false, matchedTotal = nu
             : "border-border bg-surface"
       )}
     >
-      {plan.highlight && <span className="absolute -top-3 left-6 rounded-full bg-primary-soft px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-primary shadow-[0_4px_10px_rgba(24,36,26,0.12)]">Rango más común entre nuestros clientes</span>}
+      {plan.highlight && <span className="absolute -top-3 left-6 rounded-full bg-primary-soft px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-primary shadow-[0_4px_10px_rgba(24,36,26,0.12)]">El tamaño más común en Costa Rica</span>}
       <h3 className="text-[17px] font-extrabold text-text">{plan.name}</h3>
       <p className="mt-1 text-[12px] font-bold text-text-muted">{plan.unitsLabel}</p>
       {matched && matchedTotal !== null ? (
@@ -77,10 +82,27 @@ export function PricingCard({ plan, onSelect, matched = false, matchedTotal = nu
             whitespace-nowrap on both halves plus flex-wrap on the row: without them the *text*
             breaks before the flex line does, and a narrow card ends up with both sides split
             across two ragged lines instead of one clean line each. */}
+        {/* **The worked example is rounded and says so; the calculator stays exact.**
+              Nobody has exactly 18 units, so an example is illustrative by definition and a
+              5-significant-digit figure here only costs legibility. The exact number keeps its
+              place in the calculator, where the visitor typed their own count and precision is
+              the proof that the price is mechanical rather than negotiated per customer.
+              Rounding is ≤₡12 and never touches what is charged.
+
+              It also stopped out-weighing the per-unit headline: this row used to be `font-black`
+              in a filled box directly above the CTA, so the least legible number on the card sat
+              in its best position. One bold figure per card, and it is the round one. */}
         {!matched && (
-          <p className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1 rounded-[10px] bg-surface-muted px-3 py-2.5">
-            <span className="whitespace-nowrap text-[11px] font-bold text-text-muted">{plan.monthlyRatePerUnit === null ? "Desde" : "Ejemplo"} · {plan.exampleUnits} unidades</span>
-            <strong className="whitespace-nowrap text-[13px] font-black text-text">{formatColones(totalWithIva(exampleTotal ?? 0))}<span className="text-[10px] font-bold text-text-muted"> / mes con IVA</span></strong>
+          <p className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1">
+            <span className="whitespace-nowrap text-[11px] text-text-muted">{plan.monthlyRatePerUnit === null ? "Desde" : "Ejemplo"} · {plan.exampleUnits} unidades</span>
+            {plan.monthlyRatePerUnit === null ? (
+              // Metrópoli is deliberately "Personalizado". Publishing a precise 6-digit total
+              // under a "let's talk" heading reads as an anchor you will be held to — and it
+              // contradicts the card's own "punto de partida, no el techo".
+              <strong className="whitespace-nowrap text-[12px] font-bold text-text">{formatColones(PUBLISHED_TIER_RATE_COMUNIDAD)}<span className="text-[10px] font-bold text-text-muted"> / unidad con IVA</span></strong>
+            ) : (
+              <strong className="whitespace-nowrap text-[12px] font-bold text-text">unos {formatColones(roundedExampleTotal)}<span className="text-[10px] font-bold text-text-muted"> / mes con IVA</span></strong>
+            )}
           </p>
         )}
       </div>

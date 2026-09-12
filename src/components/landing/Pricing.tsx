@@ -16,7 +16,11 @@ const INCLUDED_EVERYWHERE = [
   "Mensajería con la administración",
   "Reservas de amenidades",
   "Documentos: reglamento y actas",
+  "Visitantes y caseta, con bitácora de rondas",
+  "Asambleas con votación por filial",
+  "Mantenimiento: reportes y seguimiento",
   "Marketplace del condominio",
+  "Portafolio si administrás varios condominios",
   "Reportes en PDF",
   "Notificaciones push",
   "App instalable en el celular",
@@ -59,12 +63,19 @@ export function Pricing({ onSelectPlan }: { onSelectPlan: (planId: string) => vo
         {/* overflow-x-auto forces the y-axis to clip too (same gotcha as Features.tsx's track) —
             the badge sits above the card's own top edge, and the matched card's shadow/scale grow
             past its box on every side, so this needs real top+bottom padding, not just pb-2. */}
+        {/* **Measured at 375 and 820 before this: Esencial 100% visible, Comunidad 23%, Metrópoli
+            0% — and nothing on screen indicated the other two existed.** A carousel with no
+            pagination affordance is hidden content, not progressive disclosure, and it hid the
+            plan most visitors actually fall into. The hint is deliberately a sentence rather than
+            dots: dots need scroll-position state, and the thing missing was knowing there is more
+            to the right, not knowing which card you are on. */}
+        <p className="mb-1 text-center text-[11px] font-bold text-text-muted tablet:hidden">Deslizá para ver los tres planes →</p>
         <div className="no-scrollbar -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-8 pt-6 tablet:mx-0 tablet:grid tablet:grid-cols-3 tablet:gap-5 tablet:overflow-visible tablet:px-0 tablet:pb-0 tablet:pt-0">
           {PRICING_PLANS.map((plan) => (
             <div
               key={plan.id}
               ref={(element) => { cardRefs.current[plan.id] = element; }}
-              className="w-[82%] flex-shrink-0 snap-center tablet:w-auto"
+              className="w-[82%] flex-shrink-0 snap-center mobile:w-[48%] tablet:w-auto"
             >
               <PricingCard
                 plan={plan}

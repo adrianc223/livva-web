@@ -31,7 +31,9 @@ export type PricingPlan = {
   exampleUnits: number;
 };
 
-export const ANNUAL_DISCOUNT_PERCENT = 12;
+// 17% since 2026-09-11 (was 12, which sat below the 2026 reference range of 15–20% and read as
+// symbolic). Mirrors annualPricing.ts in Condo-Admin-Tool — kept in sync by hand.
+export const ANNUAL_DISCOUNT_PERCENT = 17;
 
 // **The per-unit rates are derived from the published price, not the other way round**
 // (2026-09-11). Prices are advertised with IVA included, so what a visitor reads is
@@ -41,10 +43,11 @@ export const ANNUAL_DISCOUNT_PERCENT = 12;
 // hand with Condo-Admin-Tool's annualPricing.ts, whose test pins the ₡1,700/₡1,600 result — this
 // repo has no test suite, so that one is the only guard for both.
 //
-// The per-unit rate is round; the example totals are not, and that is unavoidable. Graduating the
-// *published* total and deriving the base was tried and rejected — for 14 of the 120 reachable
-// unit counts no integer base yields the round total (at 6 units, 13% skips ₡10,200 entirely),
-// so the page would advertise a figure the invoice misses by ₡1.
+// The per-unit rate is round; the exact totals are not, and cannot be. base = 100·total/113 and
+// 113 is prime, so a round total with an exact 13% only exists when 113 divides the total —
+// neither ₡30 600 nor ₡99 000 qualifies. The charged base is therefore rounded to ₡100 (see
+// resolvePlanForUnits) so the *tax* is exact, and the worked example on the card is rounded for
+// *display* and labelled "unos". Never round the charge to make a total look better.
 //
 // rateExplainer is prose and names a rate as a literal, so it does NOT follow the rate
 // automatically: edit it whenever a tier or the IVA treatment changes.
@@ -78,7 +81,14 @@ export function resolvePlanForUnits(unitCount: number): { plan: PricingPlan; mon
     previousMax = tierCeiling;
     if (tier.id === plan.id) break;
   }
-  return { plan, monthlyTotal };
+  // **Rounded to the nearest ₡100 — a tax requirement, not tidiness.** Mirrors
+  // resolveMonthlyTotalForUnits in Condo-Admin-Tool, whose comment carries the full reasoning:
+  // 13% of an unrounded graduated base is not a whole colón for 115 of the 120 reachable unit
+  // counts, which made the factura declare a `Tarifa 13.00` that did not produce its own
+  // `ImpuestoNeto`. A base that is a multiple of 100 makes 13% exact by construction.
+  //
+  // This page must apply it too: a quote previewed here has to equal what the signup charges.
+  return { plan, monthlyTotal: Math.round(monthlyTotal / 100) * 100 };
 }
 
 // The annual (discounted) equivalent of resolvePlanForUnits — mirrors Condo-Admin-Tool's

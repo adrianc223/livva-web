@@ -79,6 +79,22 @@ Submitting `POST`s to `` `${NEXT_PUBLIC_LIVVA_APP_URL}/api/public/demo-signup` `
 - **Env vars** (set via `vercel env add`, live in Vercel's project settings, never committed): `RESEND_API_KEY`, `EMAIL_FROM`, `LEAD_NOTIFY_EMAIL`, `CONDO_ADMIN_API_URL`, `LANDING_LEADS_SECRET` set on both Production and Preview; `MAINTENANCE_MODE` (optional, `"true"` to activate — see "Maintenance mode and error pages" below); `APP_URL` and `NEXT_PUBLIC_LIVVA_APP_URL` (the latter added 2026-09-09 for the demo wizard above, pointing at Condo-Admin-Tool's real production URL) set on Production only (a Preview deployment's URL is unique per-deploy, so there's no single correct value to give either there — `APP_URL` falls back to `src/lib/siteUrl.ts`'s hardcoded default instead, which only affects a Preview's metadata, not its actual reachability).
 - `vercel link` creates a local `.env.local` (holding a `VERCEL_OIDC_TOKEN`) and appends `.vercel`/`.env*` to `.gitignore` automatically — both already gitignored here, never commit either.
 
+## Precios: qué se redondea y qué no (2026-09-11)
+
+**El redondeo al ₡100 de la base cobrada es un requisito tributario, no estética.** Las tarifas ₡1 504 / ₡1 416 se eligieron para que el precio *por unidad* publicado diera ₡1 700 / ₡1 600 redondos; eso rompió el *total*, porque el 13% de una base graduada no da colón entero en 115 de los 120 conteos alcanzables. El generador de facturas de la app declaraba `Tarifa 13.00` con un `ImpuestoNeto` que no era 13% del `SubTotal`. `resolvePlanForUnits` aplica el mismo redondeo que `resolveMonthlyTotalForUnits` en Condo-Admin-Tool — **una cotización previsualizada acá tiene que ser exactamente lo que cobra el signup**.
+
+**Un total redondo con 13% exacto es imposible.** `base = 100·total/113` y 113 es primo, así que solo existe cuando 113 divide al total; ni ₡30 600 ni ₡99 000 lo son. Por eso el reparto es: **el cobro es exacto, la vista se redondea**.
+
+- **El ejemplo de la tarjeta se redondea al ₡100 y dice "unos"** (≤₡12 de diferencia). Nadie tiene exactamente 18 unidades: un ejemplo es ilustrativo por definición, y cinco dígitos significativos ahí solo cuestan legibilidad. Da ₡30 600 y ₡99 000, que son bloques que el cerebro sostiene enteros.
+- **La calculadora se queda exacta.** Ahí el visitante escribió su propio número, y la precisión es la prueba de que el precio es mecánico y no negociado por cliente. Es el único lugar donde la exactitud juega a favor.
+- **La fila del ejemplo dejó de pesar más que el titular.** Estaba en `font-black` dentro de una caja rellena, justo encima del CTA — o sea, el número menos legible de la tarjeta ocupaba su mejor posición. Una sola cifra en negrita por tarjeta, y es la redonda.
+- **Metrópoli ya no publica un total exacto de 6 dígitos.** Una cifra precisa bajo un encabezado "Personalizado" se lee como un ancla a la que te van a amarrar, y contradice el propio texto de la tarjeta ("es el punto de partida, no el techo"). Ancla en la tarifa desde la que arranca el tramo.
+- `ANNUAL_DISCOUNT_PERCENT` es **17** (era 12). Se sincroniza a mano con `annualPricing.ts` de la app.
+
+**La insignia del plan destacado decía "Rango más común entre nuestros clientes" y no había ni un cliente** — 0 pagos de plataforma confirmados, 0 condominios activos que no fueran de prueba. Era prueba social falsa en la tarjeta que más quiere que la elijan. Dice "El tamaño más común en Costa Rica", que es cierto y hace el mismo trabajo. **Cualquier afirmación de tracción en esta página tiene que verificarse contra la base antes de publicarse.**
+
+**El carrusel de planes escondía el plan recomendado.** Medido a 375 y a 820: Esencial 100% visible, Comunidad **23%**, Metrópoli **0%**, sin puntos, flechas ni contador — o sea, en un condominio típico el visitante de celular veía completo solo el plan que no le corresponde. Un carrusel sin afordancia de paginación es contenido escondido. Ahora: una línea "Deslizá para ver los tres planes →" debajo de `tablet`, y las tarjetas pasan a `48%` en la banda 720–1000, donde una tarjeta de 640px dentro de un viewport de 820 desperdiciaba la mitad del ancho. Medido después: a 820 quedan **100 / 100 / 5%**.
+
 ## SEO & accessibility
 
 **Unlike the main app** (Condo-Admin-Tool, whose product is almost entirely a private, login-gated dashboard where classic SEO barely applies), **this entire site is meant to be found and indexed** — it's the public pitch for the product, so real marketing-site SEO applies in full, not just "keep the private app out of Google."

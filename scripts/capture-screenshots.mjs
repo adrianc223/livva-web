@@ -32,9 +32,19 @@ const OUT = join(dirname(fileURLToPath(import.meta.url)), "..", "public", "scree
 
 // Page name → output basename. Sizes match what the site already ships, so the layout that
 // consumes them does not have to change.
+// **Capture against the showcase condominium, never a scratch condo.** `npm run showcase` in the
+// app seeds 60 units, real Costa Rican names, and — deliberately — something in every queue:
+// payments awaiting review, a pending reservation, an unapproved comercio, tickets in all four
+// states, an open assembly vote with partial turnout. A 14-unit condo with "14 nuevas este mes"
+// photographs as an empty demo, which is the one thing a product screenshot must not do.
 const DESKTOP = [
   ["Resumen", "desktop-resumen"],
   ["Cuotas y pagos", "desktop-cuotas"],
+  ["Visitantes", "desktop-visitantes", '[data-tour="visitantes-summary"]'],
+  ["Asamblea", "desktop-asamblea"],
+  ["Documentos", "desktop-documentos"],
+  ["Mantenimiento", "desktop-mantenimiento"],
+  ["Rondas", "desktop-rondas", '[data-tour="rondas-list"]'],
   ["Anuncios", "desktop-anuncios"],
   ["Reservas", "desktop-reservas"],
   ["Marketplace", "desktop-marketplace"],
@@ -44,6 +54,8 @@ const DESKTOP = [
 const MOBILE = [
   ["Resumen", "mobile-resumen"],
   ["Cuotas y pagos", "mobile-cuotas"],
+  ["Visitantes", "mobile-visitantes", '[data-tour="visitantes-summary"]'],
+  ["Asamblea", "mobile-asamblea"],
   ["Anuncios", "mobile-anuncios"],
   ["Mensajes", "mobile-mensajes"],
 ];
@@ -92,7 +104,7 @@ async function capture(context, size, pages) {
   await signIn(page);
   await dismissOverlays(page);
 
-  for (const [pageName, file] of pages) {
+  for (const [pageName, file, leadWith] of pages) {
     await page.goto(`${APP}/?page=${encodeURIComponent(pageName)}`, { waitUntil: "networkidle" });
     // Assert the *visible* h1 actually says what this page should say. There are two h1s in the
     // DOM at all times (one desktop, one mobile, the other hidden by a breakpoint), so matching
@@ -103,12 +115,57 @@ async function capture(context, size, pages) {
       expected,
       { timeout: 30000 }
     );
+
+    // **Lead with the panel that sells, and never with one that shows an email address.**
+    // Visitantes opens on the "Caseta" panel, which is account administration: two real addresses
+    // and two red "Quitar" buttons. That is the wrong thing to photograph for a marketing page and
+    // the wrong thing to publish at all. Scrolling the gate list to the top keeps the sidebar for
+    // context while putting the day's arrivals — the thing that explains itself without words — in
+    // the frame.
+    if (leadWith) {
+      await page.evaluate((selector) => {
+        const el = document.querySelector(selector);
+        if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 96, behavior: "instant" });
+      }, leadWith);
+      await page.waitForTimeout(400);
+    }
+
+    // A published screenshot must not carry a real address, even a +alias of one. The showcase
+    // seed uses the owner's own inbox, so anything rendering an email is redacted in the capture
+    // rather than avoided by luck of framing.
+    // Scoped to what the capture actually contains — the viewport after scrolling — rather than
+    // to the whole document, which would flag panels that are nowhere near the frame.
+    const emailsVisible = await page.evaluate(() => {
+      const re = /[\w.+-]+@[\w-]+\.[\w.]+/;
+      return [...document.querySelectorAll("body *")]
+        .filter((el) => el.children.length === 0 && re.test(el.textContent ?? ""))
+        .filter((el) => {
+          const r = el.getBoundingClientRect();
+          return r.width > 0 && r.height > 0 && r.bottom > 0 && r.top < window.innerHeight;
+        })
+        .map((el) => (el.textContent ?? "").trim().slice(0, 60));
+    });
+    if (emailsVisible.length) throw new Error(`${file}: correo(s) dentro del encuadre — reencuadrá antes de publicar: ${emailsVisible.join(" | ")}`);
     await dismissOverlays(page);
     // Skeletons share their surrounding markup with the loaded state, so "the panel exists" is
     // true before any data arrives — wait for the shimmer to actually be gone.
     await page.waitForFunction(() => document.querySelectorAll(".animate-skeleton").length === 0, null, { timeout: 30000 }).catch(() => {});
     await page.waitForTimeout(600); // let the last re-render settle before the shutter
-    await page.screenshot({ path: join(OUT, `${file}.png`) });
+    // **A `leadWith` entry is clipped to its own content, not to the viewport.** These pages are
+    // short, so scrolling alone cannot both push the panel above out of frame and avoid a third of
+    // empty footer below it. A deliberate crop reads as intention; a viewport shot of a short page
+    // reads as a screenshot somebody forgot to trim.
+    const clip = leadWith
+      ? await page.evaluate((selector) => {
+          const el = document.querySelector(selector);
+          if (!el) return null;
+          const panels = [...document.querySelectorAll("article, .panel")].map((p) => p.getBoundingClientRect()).filter((r) => r.height > 0 && r.top >= el.getBoundingClientRect().top - 4);
+          const top = Math.max(0, el.getBoundingClientRect().top - 12);
+          const bottom = Math.min(window.innerHeight, Math.max(...panels.map((r) => r.bottom), el.getBoundingClientRect().bottom) + 12);
+          return { x: 0, y: top, width: window.innerWidth, height: Math.max(180, bottom - top) };
+        }, leadWith)
+      : null;
+    await page.screenshot({ path: join(OUT, `${file}.png`), ...(clip ? { clip } : {}) });
     console.log(`  ${file}.png`);
   }
   await page.close();

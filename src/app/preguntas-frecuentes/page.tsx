@@ -13,7 +13,15 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: PAGE_URL },
-  openGraph: { title: TITLE, description: DESCRIPTION, url: PAGE_URL, siteName: "Livva", locale: "es_CR", type: "website" },
+  // **`images` has to be explicit here.** `src/app/opengraph-image.png` is a file convention and
+  // is inherited only until a page declares its own `openGraph` object — declaring one without
+  // `images` drops the inherited tag entirely, which is what happened: verified in production,
+  // this page served zero `og:image` while the home page served one. It matters more than usual
+  // here because these pages get shared on WhatsApp, where a link with no image degrades to a
+  // line of grey text — and the comparison page is the one an administrator forwards to their
+  // junta directiva.
+  openGraph: { title: TITLE, description: DESCRIPTION, url: PAGE_URL, siteName: "Livva", locale: "es_CR", type: "website", images: [{ url: `${SITE_URL}/opengraph-image.png`, width: 1200, height: 630, alt: "Livva" }] },
+  twitter: { card: "summary_large_image", title: TITLE, description: DESCRIPTION, images: [`${SITE_URL}/opengraph-image.png`] },
 };
 
 // FAQPage JSON-LD, built from the exact same FAQS array the visible page renders (src/lib/faqs.ts)

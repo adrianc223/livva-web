@@ -28,7 +28,11 @@
 	--surface-muted: #eef0e9;
 	--border: #dde3d7;
 	--text: #20281f;
-	--text-muted: #6c7869;
+	/* #6c7869 gave 4.26:1 on --surface and 4.04:1 on --surface-muted — both under WCAG AA's
+	   4.5:1, on the secondary text of essentially every line of copy on the site (30 failing
+	   nodes on the home page alone). Dark mode passed comfortably, so the bug was light-only.
+	   #63705f is the smallest change that clears both backgrounds: 4.80 and 4.55. */
+	--text-muted: #63705f;
 	--primary: #2c5943;
 	--primary-soft: #e2ece5;
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowRight, ClipboardList, Link2, MessageCircleQuestion, Sparkles, UploadCloud, UserPlus } from "lucide-react";
+import Image from "next/image";
 import { SiteChrome } from "./SiteChrome";
 import { GETTING_STARTED_FAQS } from "@/lib/gettingStarted";
 
@@ -135,7 +136,25 @@ export function GettingStartedPageContent(){
                 otra — porque no usan lo mismo. Y queda un botón junto al título de cada sección para
                 volver a verlo cuando quiera.
               </p>
-              <div className="mx-auto mt-8 grid max-w-[640px] gap-3 text-left">
+              <div className="mx-auto mt-9 w-[min(300px,78%)]">
+                {/* Captured against the real app, on the showcase condominium, with the tour
+                    actually running -- not a mockup. The rounded frame is the phone; the dimmed
+                    background inside the image is driver.js's own overlay, which is precisely the
+                    thing being shown. */}
+                <Image
+                  src="/screenshots/mobile-tutorial.png"
+                  alt="La aplicación explicándole a una residente la tarjeta de su cuenta, con el recorrido guiado abierto en el paso 4 de 9"
+                  width={1170}
+                  height={2532}
+                  sizes="(max-width: 1000px) 78vw, 300px"
+                  className="h-auto w-full rounded-[26px] border border-white/15 shadow-[0_30px_70px_rgba(0,0,0,.45)]"
+                />
+                <p className="mt-3 text-[12px] leading-relaxed text-[#cfe3d5]">
+                  Así lo ve un residente la primera vez que entra. Nadie se lo tuvo que explicar.
+                </p>
+              </div>
+
+              <div className="mx-auto mt-9 grid max-w-[640px] gap-3 text-left">
                 {[
                   ["Administración", "Cómo cobrar, aprobar comprobantes, publicar anuncios y llevar la caseta."],
                   ["Dueños", "Sus cuotas, cómo reportar un pago, reservar zonas comunes y anunciar una visita."],

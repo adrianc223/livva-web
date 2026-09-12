@@ -4,10 +4,19 @@ import { ArrowRight, Sparkles } from "lucide-react";
 // Condo-Admin-Tool) instead of describing an admin-assisted onboarding ("configuramos tu
 // condominio...") that hasn't been how this actually works since self-serve shipped — the old
 // copy contradicted the "empezá ahora mismo" pitch DemoPromo/Hero already make.
+// **Each step answers "¿y quién hace ese trabajo?", because that is the real objection.** What
+// stops a junta directiva is not price or features — it is "mis vecinos no lo van a usar y me va a
+// tocar a mí explicarle a cada uno", which is the same reason the condominium is still on WhatsApp.
+// Steps 2 and 3 exist to answer exactly that, and both describe things that already shipped:
+// `Condominium.residentSignupToken` / the CSV import, and the per-page, per-role guided tours.
+//
+// Note what step 3 replaces: the site already promised "sin capacitaciones ni manuales" with
+// nothing behind it, while `tutorial` appeared zero times across all three pages. The promise is
+// now a checkable fact.
 const STEPS = [
-  { number: "1", title: "Completás el formulario", copy: "Elegí tu plan e indicá cuántas unidades tiene tu condominio — menos de un minuto." },
-  { number: "2", title: "Activás tu cuenta al instante", copy: "Recibís tu acceso por correo en el momento, sin esperar a que nadie te contacte." },
-  { number: "3", title: "Invitás a tus residentes", copy: "Cada uno recibe su propio correo de activación y empiezan a usar Livva el mismo día." },
+  { number: "1", title: "Tu condominio, hoy", copy: "Llenás cinco campos y ya estás adentro. Sin llamada de ventas, sin implementación, sin esperar a que nadie te contacte." },
+  { number: "2", title: "Tus vecinos, sin perseguir a nadie", copy: "Compartís un link y cada quien pone sus propios datos. O subís la lista en CSV. Vos no tecleás sesenta correos." },
+  { number: "3", title: "Nadie tiene que preguntar cómo se usa", copy: "La primera vez que alguien abre una pantalla, Livva le explica esa pantalla — y le explica distinto según sea administración, dueño, inquilino o caseta. Se puede volver a ver cuando quiera." },
 ];
 
 type HowItWorksProps = { onOpenWizard: () => void };
@@ -26,8 +35,8 @@ export function HowItWorks({ onOpenWizard }: HowItWorksProps) {
     <section className="bg-[#1f3d2f] px-5 py-20 dark:bg-[#16261d]">
       <div className="mx-auto max-w-[1100px]">
         <div className="mx-auto mb-12 max-w-[560px] text-center">
-          <span className="text-[11px] font-black uppercase tracking-[1.6px] text-[#cfe3d5]">Cómo funciona</span>
-          <h2 className="mt-2 text-[clamp(24px,3.5vw,34px)] tracking-[-1px] text-white">Configurá la administración de tu condominio en minutos, no semanas</h2>
+          <span className="text-[11px] font-black uppercase tracking-[1.6px] text-[#cfe3d5]">Cómo empezar</span>
+          <h2 className="mt-2 text-[clamp(24px,3.5vw,34px)] tracking-[-1px] text-white">Empezar es lo fácil. Eso es justamente lo difícil de creer.</h2>
         </div>
         <div className="grid grid-cols-1 gap-6 tablet:grid-cols-3 tablet:gap-5">
           {STEPS.map((step) => (

@@ -4,13 +4,21 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { PointerEvent as ReactPointerEvent, useEffect, useRef, useState } from "react";
 import { BrowserFrame } from "./DeviceFrames";
 
+// **Order is deliberate: what a Costa Rican condominium asks for first goes first.** After the
+// cuota, "¿quién viene hoy?" is the thing an administración is asked most, and control de acceso
+// is usually bought as a separate product — so it leads. Marketplace used to occupy two of six
+// cards while four shipped modules had none; it is one card now.
 const FEATURES = [
-  { title: "Cuotas y pagos", copy: "Cálculo automático de cuotas y moras, comprobantes de pago y reportes en PDF para cada residente.", image: "/screenshots/desktop-cuotas.png" },
+  { title: "Cuotas y pagos", copy: "Cálculo automático de cuotas y moras. El residente reporta su pago con un código único que vos buscás en tu estado de cuenta — no una foto que solo prueba que alguien hizo una captura.", image: "/screenshots/desktop-cuotas.png" },
+  { title: "Visitantes y caseta", copy: "La lista del día en el portón, con entrada y salida. Al dueño le llega el aviso apenas su visita entra, y la cédula y la placa se borran solas a los 90 días.", image: "/screenshots/desktop-visitantes.png" },
+  { title: "Bitácora de rondas", copy: "El guarda registra cada ronda desde su propia cuenta. La hora la pone el servidor y el registro no se puede editar ni borrar después.", image: "/screenshots/desktop-rondas.png" },
+  { title: "Asambleas y votaciones", copy: "Un voto por filial, como manda la ley. El conteo no se ve hasta que la votación cierra, para no inclinar a quien todavía no ha votado.", image: "/screenshots/desktop-asamblea.png" },
+  { title: "Documentos del condominio", copy: "El reglamento, las actas y los estados financieros en un solo lugar. Cada documento define si lo ven todos o solo los dueños.", image: "/screenshots/desktop-documentos.png" },
+  { title: "Mantenimiento", copy: "Lo que se reporta queda con estado y prioridad, y la prioridad la pone la administración — no quien reporta, porque entonces todo es urgente.", image: "/screenshots/desktop-mantenimiento.png" },
   { title: "Anuncios", copy: "Comunicados de la administración con confirmación de lectura, para que ningún aviso importante se pierda.", image: "/screenshots/desktop-anuncios.png" },
   { title: "Reservas de amenidades", copy: "Piscina, salón de eventos, cancha — un calendario compartido para reservar sin choques ni llamadas.", image: "/screenshots/desktop-reservas.png" },
-  { title: "Comercios locales", copy: "Los vecinos que emprenden publican su negocio, con aprobación del administrador antes de salir al público.", image: "/screenshots/desktop-comercios.png" },
-  { title: "Marketplace interno", copy: "Los residentes compran y consultan directamente con los comercios de su propia comunidad.", image: "/screenshots/desktop-marketplace.png" },
-  { title: "Mensajería directa", copy: "Residentes y administración conversan en un solo canal, sin mezclarse con grupos externos de WhatsApp.", image: "/screenshots/desktop-mensajes.png" },
+  { title: "Marketplace del condominio", copy: "Los vecinos que emprenden publican su negocio, con aprobación del administrador, y los residentes les consultan directamente.", image: "/screenshots/desktop-marketplace.png" },
+  { title: "Mensajería directa", copy: "Residentes, administración y caseta conversan en un solo canal, sin mezclarse con grupos externos de WhatsApp.", image: "/screenshots/desktop-mensajes.png" },
 ];
 
 // Duplicated once so the loop has a second identical half to scroll into — wrapping scrollLeft

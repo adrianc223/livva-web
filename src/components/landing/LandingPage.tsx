@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Differentiation } from "./Differentiation";
 import { ContactSection } from "./ContactSection";
-import { DemoPromo } from "./DemoPromo";
 import { DemoWizard } from "./DemoWizard";
 import { Features } from "./Features";
 import { Footer } from "./Footer";
@@ -31,10 +30,9 @@ export function LandingPage() {
       <main className="flex-1">
         <Hero onOpenWizard={() => wizard.open()} />
         <ValueProps />
-        <DemoPromo onOpenWizard={() => wizard.open()} />
+        <HowItWorks onOpenWizard={() => wizard.open()} />
         <Features />
         <MobileShowcase />
-        <HowItWorks onOpenWizard={() => wizard.open()} />
         <Security />
         {/* Sits immediately before the price so it frames the number rather than competing with
             it — "¿por qué esta y no otra?" answered while the reader is deciding, not after. */}

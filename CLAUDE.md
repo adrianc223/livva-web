@@ -144,6 +144,19 @@ Same two mechanisms as Condo-Admin-Tool (2026-09-10) — see that repo's own CLA
 - 5 subagents live under `.claude/agents/` (`frontend`, `backend`, `security`, `qa`, `seo`), ported from the main app and rescoped to what this single-page site actually needs.
 - **Document as you go**: update this file's relevant section in the same session you change how a section, the lead flow, or a pattern works.
 
+## Contenido: el sitio vendía el producto de hace dos semanas (2026-09-11)
+
+Medido en producción sobre las tres páginas: `caseta` 0, `ronda` 0, `bitácora` 0, `SINPE` 0, `IBAN` 0, `conciliación` 0, `tutorial` 0, `CSV` 0, `auto-registro` 0. Las dos coincidencias de `guarda` eran *guardamos* y *guardada*. Visitantes, asamblea, mantenimiento y documentos existían **solo dentro de una frase corrida** en `Differentiation` — sin heading, sin captura, sin explicación: técnicamente mencionados y funcionalmente invisibles, tanto para una query como para extracción por IA.
+
+- **El carrusel de funciones pasó de 6 a 10 tarjetas** y el orden es deliberado: después de la cuota, *"¿quién viene hoy?"* es lo que más le preguntan a una administración costarricense, y el control de acceso se compra aparte hoy — así que Visitantes va segundo, detrás de Cuotas. **Marketplace ocupaba dos de las seis tarjetas** mientras cuatro módulos enviados no tenían ninguna; ahora es una.
+- **Las afirmaciones son concretas donde antes eran genéricas**, que es lo que un motor generativo cita y lo que un comprador verifica: "la cédula y la placa se borran solas a los 90 días", "un voto por filial", "el conteo no se ve hasta que cierra", "la hora la pone el servidor y el registro no se puede editar". Todo eso ya estaba implementado; lo único que faltaba era decirlo.
+
+**`DemoPromo` se fusionó en `HowItWorks`, que pasó a ser "Cómo empezar" y se movió antes de `Features`.** Las dos secciones argumentaban lo mismo, en la misma banda oscura, separadas por 2.500px — ~1.900px de una página de 11.767px diciéndolo dos veces. Y el orden importa: la objeción de adopción tiene que caer **antes** de que la persona evalúe funciones, porque si no, cada módulo que ve suma a la sensación de "esto es mucho que aprender".
+
+Los tres pasos contestan *"¿y quién hace ese trabajo?"*, que es la objeción real de una junta directiva: no es el precio ni las funciones, es *"mis vecinos no lo van a usar y me va a tocar a mí explicarle a cada uno"* — la misma razón por la que el condominio sigue en WhatsApp. El paso 3 (los tutoriales por rol) además **respalda una promesa que el sitio ya hacía sin sustento**: "sin capacitaciones ni manuales", con `tutorial` apareciendo cero veces en todo el sitio.
+
+**Medido: la página bajó de 11.767px a 10.898px en celular agregando cuatro tarjetas de funciones.** La fusión pagó de sobra lo que sumó el contenido nuevo.
+
 ## Product screenshots (`public/screenshots/`)
 
 Recaptured with `scripts/capture-screenshots.mjs`, not by hand. They had been taken ad hoc, which is how the set shipping until 2026-09-11 went stale: captured 2026-09-08 from a condominium showing **₡0 collected and ₡396 000 overdue** — the marketing image of the payments feature advertised nothing collected — and carrying the Title Case bug that was fixed in the app the same day.

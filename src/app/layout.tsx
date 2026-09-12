@@ -92,6 +92,32 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           data-cf-beacon='{"token": "b09a1e6bcb484c528241db8c3a96e724"}'
           strategy="afterInteractive"
         />
+
+        {/* Google Analytics 4. The measurement ID is public by design, same as the Cloudflare
+            beacon token above — it identifies the property, it does not authorise anything.
+
+            **Only on the production deployment.** Every preview build answers on its own
+            *.vercel.app URL and would otherwise report its traffic into the same property, so the
+            numbers this exists to improve would be padded by our own testing. Cloudflare's beacon
+            predates this guard and still has that problem.
+
+            Why both and not one: Cloudflare measures **visits** (cookieless, no personal data
+            leaves for it) and GA4 measures **what people do** — events, funnels and campaign
+            attribution, which is the question worth answering here, since the benchmark put the
+            constraint on distribution rather than on the product. Note the trade honestly: GA4
+            sets cookies and sends data to Google, which the Cloudflare beacon deliberately
+            does not. */}
+        {process.env.VERCEL_ENV === "production" && (
+          <>
+            <Script src="https://www.googletagmanager.com/gtag/js?id=G-FC8FCL580Q" strategy="afterInteractive" />
+            <Script id="ga4" strategy="afterInteractive">
+              {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-FC8FCL580Q');`}
+            </Script>
+          </>
+        )}
       </body>
     </html>
   );

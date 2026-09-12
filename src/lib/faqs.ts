@@ -29,8 +29,8 @@ export const FAQS = [
     a: "No. Livva funciona directo desde el navegador del celular o la computadora, y también se puede agregar a la pantalla de inicio como una app — sin pasar por ninguna tienda de aplicaciones.",
   },
   {
-    q: "¿Cómo suben los residentes sus comprobantes de pago?",
-    a: "Cada residente sube una foto o captura de su comprobante directamente en la app, y el administrador lo confirma en segundos — con el historial completo siempre a la vista para ambos.",
+    q: "¿Cómo reportan los residentes sus pagos?",
+    a: "La app le muestra al residente el monto, la cuenta a la que transferir y un código único de ese mes. Pega ese código en el detalle de la transferencia, y vos lo buscás en tu estado de cuenta para confirmar. Puede adjuntar el comprobante si quiere, pero es opcional: lo que prueba que el dinero llegó es tu estado de cuenta, no una captura de pantalla.",
   },
   {
     q: "¿Qué pasa con los datos de mis residentes?",

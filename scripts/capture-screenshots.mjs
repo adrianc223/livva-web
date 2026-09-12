@@ -17,8 +17,11 @@
 // The account must be an ADMIN of a condominium that looks like a well-run building — real
 // collection for the current month, a small but non-zero morosidad, some announcements,
 // reservations and marketplace vendors. An empty condominium makes a worse advertisement than
-// no screenshot at all. Turn its tutorialsEnabled/pwaTutorialEnabled off first, or the tour
-// overlay lands in the middle of the capture.
+// no screenshot at all.
+//
+// CAPTURE_ONLY recaptura un subconjunto: `CAPTURE_ONLY=desktop-marketplace`. Sirve cuando cambió
+// una sola pantalla y no hay por qué regenerar las dieciocho — cada PNG que se reescribe sin
+// necesidad es ruido en el diff y una imagen más que revisar antes de publicar.
 
 import { chromium } from "playwright";
 import { mkdir } from "node:fs/promises";
@@ -29,6 +32,7 @@ const APP = process.env.CAPTURE_APP_URL ?? "http://localhost:3000";
 const EMAIL = process.env.CAPTURE_EMAIL;
 const PASSWORD = process.env.CAPTURE_PASSWORD;
 const OUT = join(dirname(fileURLToPath(import.meta.url)), "..", "public", "screenshots");
+const ONLY = (process.env.CAPTURE_ONLY ?? "").split(",").map((name) => name.trim()).filter(Boolean);
 
 // Page name → output basename. Sizes match what the site already ships, so the layout that
 // consumes them does not have to change.
@@ -65,6 +69,36 @@ if (!EMAIL || !PASSWORD) {
   process.exit(1);
 }
 
+/**
+ * Apaga el onboarding del lado del navegador, antes de que corra un solo script de la app.
+ *
+ * **Esto lo pedía el comentario de arriba como un paso manual y ya no se puede.** El fixture ahora
+ * siembra `tutorialsEnabled` en true a propósito — apagarlo escondía el botón "Ver tutorial", que
+ * es justo lo que una demo existe para mostrar — así que un contexto nuevo de Playwright, con
+ * localStorage vacío, arranca el tour de cada página y el overlay de driver.js queda dentro de la
+ * foto. Apagar la bandera en la base de datos para sacar una captura sería modificar producción
+ * (dev y producción comparten una sola base) para un efecto que es puramente del cliente.
+ *
+ * Se intercepta `getItem` en vez de sembrar una llave por tour: los tourId son una lista que
+ * crece, y una lista desactualizada falla en silencio — con una captura arruinada, no con un
+ * error.
+ */
+function suppressOnboarding(page) {
+  return page.addInitScript(() => {
+    try {
+      window.localStorage.setItem("livva-install-dismissed", "1");
+      window.localStorage.setItem("livva-pwa-tutorial-seen", "1");
+      const getItem = Storage.prototype.getItem;
+      Storage.prototype.getItem = function (key) {
+        if (typeof key === "string" && key.startsWith("livva-tutorial-seen-")) return "1";
+        return getItem.call(this, key);
+      };
+    } catch {
+      // Modo privado: no persiste nada y el tour aparece. Se ve en la captura.
+    }
+  });
+}
+
 async function signIn(page) {
   // networkidle, not domcontentloaded: the form must be hydrated before the click, or the
   // browser performs the native POST the form now declares instead of running React's handler —
@@ -85,6 +119,22 @@ async function signIn(page) {
   await page.getByRole("heading", { name: /Buenos|Buenas/ }).first().waitFor({ timeout: 30000 });
 }
 
+/**
+ * Esconde el indicador de desarrollo de Next.
+ *
+ * **Se coló en la primera recaptura y hay que decir por qué importa**: es un círculo oscuro con la
+ * N de Next abajo a la izquierda, encima de la barra lateral, y en una captura que el sitio rotula
+ * "Capturas reales — no maquetas" delata que la foto se sacó de un servidor de desarrollo. Las
+ * capturas del 11 de septiembre no lo tenían, así que apareció después — motivo de más para
+ * apagarlo acá y no confiar en que no esté.
+ *
+ * Se esconde en la captura en vez de apagarlo en `next.config.ts`: el indicador es útil mientras se
+ * desarrolla, y esto es un problema de esta herramienta, no de la app.
+ */
+function hideDevOverlay(page) {
+  return page.addStyleTag({ content: "nextjs-portal { display: none !important; }" }).catch(() => {});
+}
+
 async function dismissOverlays(page) {
   // The PWA install banner is fixed to the bottom on mobile widths and would sit in the frame.
   //
@@ -99,13 +149,18 @@ async function dismissOverlays(page) {
 }
 
 async function capture(context, size, pages) {
+  const selected = ONLY.length ? pages.filter(([, file]) => ONLY.includes(file)) : pages;
+  if (!selected.length) return;
+
   const page = await context.newPage();
   await page.setViewportSize(size);
+  await suppressOnboarding(page);
   await signIn(page);
   await dismissOverlays(page);
 
-  for (const [pageName, file, leadWith] of pages) {
+  for (const [pageName, file, leadWith] of selected) {
     await page.goto(`${APP}/?page=${encodeURIComponent(pageName)}`, { waitUntil: "networkidle" });
+    await hideDevOverlay(page);
     // Assert the *visible* h1 actually says what this page should say. There are two h1s in the
     // DOM at all times (one desktop, one mobile, the other hidden by a breakpoint), so matching
     // on text alone could be satisfied by the one nobody can see.
@@ -174,6 +229,7 @@ async function capture(context, size, pages) {
 const browser = await chromium.launch();
 try {
   await mkdir(OUT, { recursive: true });
+  if (ONLY.length) console.log(`solo: ${ONLY.join(", ")}`);
   console.log("escritorio 1280x800:");
   await capture(await browser.newContext({ deviceScaleFactor: 2 }), { width: 1280, height: 800 }, DESKTOP);
   console.log("móvil 390x844:");

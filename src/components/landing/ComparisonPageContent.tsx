@@ -13,7 +13,7 @@ const POINTS = [
   {
     area: "Cuotas y pagos",
     old: "Comprobantes perdidos entre cientos de mensajes de WhatsApp — nadie sabe con certeza quién ya pagó este mes.",
-    livva: "Cada residente sube su comprobante directo en la app; el administrador confirma en segundos, con el historial completo siempre a la vista.",
+    livva: "Cada residente reporta su pago con un código único que aparece en el detalle de la transferencia; vos lo encontrás en tu estado de cuenta y confirmás. El historial completo, siempre a la vista.",
   },
   {
     area: "Anuncios",

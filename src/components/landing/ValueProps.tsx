@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const VALUE_PROPS = [
   { icon: Layers, title: "Todo en un solo lugar", copy: "Cuotas, anuncios, reservas y mensajería en una sola plataforma, sin depender de hojas de cálculo o grupos de chat." },
-  { icon: Wallet, title: "Pagos sin fricción", copy: "Los residentes suben su comprobante y el administrador confirma el pago en segundos, con el historial siempre a la vista." },
+  { icon: Wallet, title: "Pagos sin fricción", copy: "Cada residente reporta su pago con un código único que vos encontrás en tu estado de cuenta. El historial queda siempre a la vista." },
   { icon: MessageCircleHeart, title: "Comunicación instantánea", copy: "Anuncios y mensajería directa entre residentes, administración y comercios locales, con notificaciones al momento." },
   { icon: ShieldCheck, title: "Transparencia total", copy: "Cada residente ve el estado real de su cuota, sus reservas y la actividad de su comunidad, siempre actualizado." },
 ];
